@@ -1,0 +1,19 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/settings",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7284
+        }
+      ],
+      "UpstreamPathTemplate": "/notifications/settings",
+      "UpstreamHttpMethod": [ "Get" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7204"
+  }
+}
