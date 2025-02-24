@@ -17,6 +17,6 @@ public class SettingsController : ControllerBase
     public IEnumerable<string> Get()
     {
         _logger.LogTrace("SettingsController::GetSettings called");
-        return ["value1", "value2"];
+        return ["value1", "value2", "value3"];
     }
 }
