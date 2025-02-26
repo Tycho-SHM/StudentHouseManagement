@@ -65,7 +65,7 @@ public class RabbitMQConnection : IMessageBrokerConnection
                 channel = await connection.CreateChannelAsync();
                 _channels[queueName] = channel;
 
-                await _channels[queueName]!.QueueDeclareAsync(queueName);
+                await _channels[queueName]!.QueueDeclareAsync(queueName, true, false, false, null);
             }
             
             return channel!;

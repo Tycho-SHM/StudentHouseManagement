@@ -8,6 +8,15 @@ var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddJsonFile("ocelot.development.json");
+    builder.Services.AddCors(o =>
+    {
+        o.AddPolicy("DevelopmentCors", p =>
+        {
+            p.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
 }
 else
 {
@@ -26,6 +35,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    app.UseCors("DevelopmentCors");
 }
 
 app.UseHttpsRedirection();
