@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace NotificationService.API.Controllers;
+namespace SHM.NotificationService.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]

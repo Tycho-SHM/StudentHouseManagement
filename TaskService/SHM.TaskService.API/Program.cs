@@ -1,8 +1,11 @@
 using Scalar.AspNetCore;
+using SHM.MessageQueues.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.RegisterSHMRabbitMQ();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

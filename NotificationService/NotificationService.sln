@@ -1,6 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.API", "NotificationService.API\NotificationService.API.csproj", "{FAD02A44-2F85-462C-A98D-5C264B5BACE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.NotificationService.API", "SHM.NotificationService.API\SHM.NotificationService.API.csproj", "{FAD02A44-2F85-462C-A98D-5C264B5BACE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.NotificationService", "SHM.NotificationService\SHM.NotificationService.csproj", "{F75718BD-353D-4670-A5B5-7C4C7B7BAE5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MQ", "MQ", "{7FE8F273-ABF5-4CA4-9603-F389706F218F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.MessageQueues.Abstractions", "SHM.MessageQueues.Abstractions\SHM.MessageQueues.Abstractions.csproj", "{83677C4B-DD66-417A-8928-05B2088635DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.MessageQueues.RabbitMQ", "SHM.MessageQueues.RabbitMQ\SHM.MessageQueues.RabbitMQ.csproj", "{2F32D6B6-BE21-4155-97B5-FC15D6106AAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +20,21 @@ Global
 		{FAD02A44-2F85-462C-A98D-5C264B5BACE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAD02A44-2F85-462C-A98D-5C264B5BACE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAD02A44-2F85-462C-A98D-5C264B5BACE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F75718BD-353D-4670-A5B5-7C4C7B7BAE5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F75718BD-353D-4670-A5B5-7C4C7B7BAE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F75718BD-353D-4670-A5B5-7C4C7B7BAE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F75718BD-353D-4670-A5B5-7C4C7B7BAE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83677C4B-DD66-417A-8928-05B2088635DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83677C4B-DD66-417A-8928-05B2088635DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83677C4B-DD66-417A-8928-05B2088635DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83677C4B-DD66-417A-8928-05B2088635DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F32D6B6-BE21-4155-97B5-FC15D6106AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F32D6B6-BE21-4155-97B5-FC15D6106AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F32D6B6-BE21-4155-97B5-FC15D6106AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F32D6B6-BE21-4155-97B5-FC15D6106AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83677C4B-DD66-417A-8928-05B2088635DA} = {7FE8F273-ABF5-4CA4-9603-F389706F218F}
+		{2F32D6B6-BE21-4155-97B5-FC15D6106AAB} = {7FE8F273-ABF5-4CA4-9603-F389706F218F}
 	EndGlobalSection
 EndGlobal
