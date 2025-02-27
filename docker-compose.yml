@@ -1,3 +1,9 @@
+secrets:
+  github_token:
+    file: ./.secrets/github_packages_token.txt
+  rabbitmq_password:
+    file: ./.secrets/rabbitmq_password.txt
+
 services:
   rabbitmq:
     image: rabbitmq:4-management
@@ -8,3 +14,53 @@ services:
       - 15672:15672
     volumes:
       - ./dockerdata/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+  taskservice:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build:
+      dockerfile: ./TaskService/Dockerfile
+      args:
+        GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
+        GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
+      secrets:
+        - github_token
+    image: tycho-shm/taskservice
+    container_name: shm-taskservice
+    hostname: shm-taskservice
+    ports:
+      - 6001:8080
+    environment:
+      RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
+      RabbitMQ__Username: $RABBITMQ_USERNAME
+      RabbitMQ__Password: /run/secrets/rabbitmq_password
+    secrets:
+      - rabbitmq_password
+  notificationservice:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build:
+      dockerfile: ./NotificationService/Dockerfile
+      args:
+        GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
+        GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
+      secrets:
+        - github_token
+    image: tycho-shm/notificationservice
+    container_name: shm-notificationservice
+    hostname: shm-notificationservice
+    ports:
+      - 6002:8080
+    environment:
+      RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
+      RabbitMQ__Username: $RABBITMQ_USERNAME
+      RabbitMQ__Password: /run/secrets/rabbitmq_password
+    secrets:
+      - rabbitmq_password

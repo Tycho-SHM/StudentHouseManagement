@@ -3,3 +3,6 @@
 */.idea
 *.idea
 /dockerdata
+/.secrets/*
+!.secrets/examples
+/.env

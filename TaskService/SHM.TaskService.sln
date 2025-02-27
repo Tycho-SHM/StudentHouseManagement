@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.TaskService.API", "SHM.TaskService.API\SHM.TaskService.API.csproj", "{3CCB9983-AAE6-4773-8E62-94EB9B016F9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.TaskService.Model", "SHM.TaskService.Model\SHM.TaskService.Model.csproj", "{C38496A3-634C-4EC0-AA93-D3566E49B8E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.TaskService.Abstractions", "SHM.TaskService.Abstractions\SHM.TaskService.Abstractions.csproj", "{83171374-B911-45E1-B307-EED7854EA11B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,6 +16,14 @@ Global
 		{3CCB9983-AAE6-4773-8E62-94EB9B016F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CCB9983-AAE6-4773-8E62-94EB9B016F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CCB9983-AAE6-4773-8E62-94EB9B016F9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C38496A3-634C-4EC0-AA93-D3566E49B8E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C38496A3-634C-4EC0-AA93-D3566E49B8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C38496A3-634C-4EC0-AA93-D3566E49B8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C38496A3-634C-4EC0-AA93-D3566E49B8E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83171374-B911-45E1-B307-EED7854EA11B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83171374-B911-45E1-B307-EED7854EA11B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83171374-B911-45E1-B307-EED7854EA11B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83171374-B911-45E1-B307-EED7854EA11B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

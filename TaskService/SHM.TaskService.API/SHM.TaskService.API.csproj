@@ -7,10 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.0.18" />
-        <PackageReference Include="shm.messagequeues.abstractions" Version="0.1.0" />
-        <PackageReference Include="shm.messagequeues.rabbitmq" Version="0.1.0" />
+        <PackageReference Include="SHM.MessageQueues.Abstractions" Version="0.2.0" />
+        <PackageReference Include="SHM.MessageQueues.RabbitMQ" Version="0.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SHM.TaskService.Abstractions\SHM.TaskService.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
