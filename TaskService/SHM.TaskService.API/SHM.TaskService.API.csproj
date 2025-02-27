@@ -9,11 +9,8 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
         <PackageReference Include="Scalar.AspNetCore" Version="2.0.18" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\NotificationService\SHM.MessageQueues.Abstractions\SHM.MessageQueues.Abstractions.csproj" />
-      <ProjectReference Include="..\..\NotificationService\SHM.MessageQueues.RabbitMQ\SHM.MessageQueues.RabbitMQ.csproj" />
+        <PackageReference Include="shm.messagequeues.abstractions" Version="0.1.0" />
+        <PackageReference Include="shm.messagequeues.rabbitmq" Version="0.1.0" />
     </ItemGroup>
 
 </Project>
