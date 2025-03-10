@@ -2,7 +2,11 @@
 /.idea
 */.idea
 *.idea
+
 /dockerdata
-/.secrets/*
+
+/.secrets/
 !.secrets/examples
+
 /.env
+.env

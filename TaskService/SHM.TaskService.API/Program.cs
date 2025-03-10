@@ -17,8 +17,6 @@ builder.Services.RegisterSHMRabbitMQ(options =>
     }
 });
 
-Console.WriteLine(builder.Configuration.GetSection("RabbitMQ").GetValue<string>("Password"));
-
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

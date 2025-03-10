@@ -7,6 +7,8 @@ secrets:
 services:
   rabbitmq:
     image: rabbitmq:4-management
+    profiles:
+      - rabbitmq
     container_name: shm-rabbitmq
     hostname: shm-rabbitmq
     ports:
@@ -32,6 +34,8 @@ services:
       secrets:
         - github_token
     image: tycho-shm/taskservice
+    profiles:
+      - services
     container_name: shm-taskservice
     hostname: shm-taskservice
     ports:
@@ -54,6 +58,8 @@ services:
       secrets:
         - github_token
     image: tycho-shm/notificationservice
+    profiles:
+      - services
     container_name: shm-notificationservice
     hostname: shm-notificationservice
     ports:
