@@ -1,0 +1,21 @@
+name: Testing playground
+
+on:
+  push:
+    branches:
+      - github-actions-playground
+
+permissions:
+  packages: read
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout repo
+
+      - name: check docker
+        run: docker ps
