@@ -17,5 +17,5 @@ jobs:
       - uses: actions/checkout@v4
         name: Checkout repo
 
-      - name: check docker
-        run: docker ps
+      - name: build docker compose
+        run: docker compose build
