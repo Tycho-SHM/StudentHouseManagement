@@ -1,9 +1,3 @@
-secrets:
-  github_token:
-    file: ./.secrets/github_packages_token.txt
-  rabbitmq_password:
-    file: ./.secrets/rabbitmq_password.txt
-
 services:
   rabbitmq:
     image: rabbitmq:4-management
@@ -31,8 +25,7 @@ services:
       args:
         GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
         GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
-      secrets:
-        - github_token
+        GITHUB_TOKEN: $GITHUB_PACKAGES_TOKEN
     image: tycho-shm/taskservice
     profiles:
       - services
@@ -43,9 +36,7 @@ services:
     environment:
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
-      RabbitMQ__Password: /run/secrets/rabbitmq_password
-    secrets:
-      - rabbitmq_password
+      RabbitMQ__Password: $RABBITMQ_PASSWORD
   notificationservice:
     depends_on:
       rabbitmq:
@@ -55,8 +46,7 @@ services:
       args:
         GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
         GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
-      secrets:
-        - github_token
+        GITHUB_TOKEN: $GITHUB_PACKAGES_TOKEN
     image: tycho-shm/notificationservice
     profiles:
       - services
@@ -67,6 +57,4 @@ services:
     environment:
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
-      RabbitMQ__Password: /run/secrets/rabbitmq_password
-    secrets:
-      - rabbitmq_password
+      RabbitMQ__Password: $RABBITMQ_PASSWORD
