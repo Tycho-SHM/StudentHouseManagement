@@ -1,6 +1,6 @@
 # Tycho student house management
 
-> This is my project for semester 6 advanced software at Fontys HBO-ICT. This (probably) isn't a fully functional product or ever will be one.
+> This is my project for semester 6 advanced software at Fontys HBO-ICT. This isn't a fully functional product and will (probably) never be one.
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Tycho-SHM_StudentHouseManagement&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Tycho-SHM_StudentHouseManagement)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Tycho-SHM_StudentHouseManagement&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Tycho-SHM_StudentHouseManagement)
