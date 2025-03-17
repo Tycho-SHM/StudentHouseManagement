@@ -3,7 +3,7 @@ name: Testing playground
 on:
   push:
     branches:
-      - github-actions-playground
+      - main
 
 permissions:
   packages: write
