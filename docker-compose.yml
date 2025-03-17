@@ -3,6 +3,7 @@ services:
     image: rabbitmq:4-management
     profiles:
       - rabbitmq
+      - all
     container_name: shm-rabbitmq
     hostname: shm-rabbitmq
     ports:
@@ -29,6 +30,7 @@ services:
     image: tycho-shm/taskservice
     profiles:
       - services
+      - all
     container_name: shm-taskservice
     hostname: shm-taskservice
     ports:
@@ -50,6 +52,7 @@ services:
     image: tycho-shm/notificationservice
     profiles:
       - services
+      - all
     container_name: shm-notificationservice
     hostname: shm-notificationservice
     ports:

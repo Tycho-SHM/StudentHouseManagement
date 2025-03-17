@@ -28,7 +28,7 @@ jobs:
 
       - name: Docker compose build
         run: |
-          docker compose --profile rabbitmq --profile services build
+          docker compose --profile all build
           mkdir dockerimages
           docker save tycho-shm/notificationservice -o ./dockerimages/notificationservice.tar
           docker save tycho-shm/taskservice -o ./dockerimages/taskservice.tar
@@ -60,6 +60,24 @@ jobs:
           docker load -i ./dockerimages/notificationservice.tar
           docker load -i ./dockerimages/taskservice.tar
           docker images
+
+      - name: Create and populate .env file
+        run: |
+          echo "RABBITMQ_HOSTNAME=rabbitmq" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+
+      - name: run docker containers
+        run: |
+          docker compose --profile all up -d
+          docker ps
+
+      - name: Make POST request
+        run: |
+          sleep 5s
+          docker compose logs notificationservice
+          curl 'http://localhost:6001/Task?Message=Hello%20world!' --request POST
+          docker compose logs notificationservice
 
   cleanup:
     runs-on: ubuntu-latest
