@@ -86,7 +86,7 @@ jobs:
 
       - name: Validate Docker logs
         run: |
-          docker compose logs shm-notificationservice > notificationservicelogs.txt
+          docker compose --profile all logs shm-notificationservice > notificationservicelogs.txt
           if grep -q "NEW MESSAGE FROM MESSAGEBUS: Hello world!" notificationservicelogs.txt; then
             echo "Log entry containing hello world message found!"
           else
