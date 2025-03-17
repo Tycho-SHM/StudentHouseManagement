@@ -124,20 +124,10 @@ jobs:
           docker load -i ./dockerimages/taskservice.tar
           docker images
 
-      - name: Get Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            tycho-shm/notificationservice
-            tycho-shm/taskservice
-
       - name: Push to github packages
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+        run: |
+          docker push tycho-shm/notificationservice
+          docker push tycho-shm/taskservice
 
   cleanup:
     runs-on: ubuntu-latest
