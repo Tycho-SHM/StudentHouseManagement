@@ -60,3 +60,17 @@ jobs:
           docker load -i ./dockerimages/notificationservice.tar
           docker load -i ./dockerimages/taskservice.tar
           docker images
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+    if: ${{ always() }}
+
+    steps:
+      - uses: geekyeggo/delete-artifact@v5
+        name: Cleanup artifacts
+        with:
+          name: |
+            docker-images
