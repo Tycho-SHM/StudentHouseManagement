@@ -4,12 +4,11 @@ WORKDIR /src
 
 # Setup GitHub Packages NuGet source
 ARG GITHUB_USERNAME
+ARG GITHUB_TOKEN
 ARG GITHUB_OWNER
 
 # Configure NuGet to use GitHub Packages
-RUN --mount=type=secret,id=github_token \
-    GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
-    dotnet nuget add source https://nuget.pkg.github.com/${GITHUB_OWNER}/index.json \
+RUN dotnet nuget add source https://nuget.pkg.github.com/${GITHUB_OWNER}/index.json \
     --name github \
     --username ${GITHUB_USERNAME} \
     --password "${GITHUB_TOKEN}" \

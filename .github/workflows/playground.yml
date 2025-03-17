@@ -1,0 +1,150 @@
+name: Testing playground
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  packages: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout repo
+
+      - name: Create and populate .env file
+        run: |
+          echo "RABBITMQ_HOSTNAME=rabbitmq" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+          echo "GITHUB_PACKAGES_ORGANIZATION=Tycho-SHM" >> .env
+          echo "GITHUB_PACKAGES_USERNAME=Tycho-SHM" >> .env
+          echo "GITHUB_PACKAGES_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
+
+      - name: Docker compose build
+        run: |
+          docker compose --profile all build
+          mkdir dockerimages
+          docker save tycho-shm/notificationservice -o ./dockerimages/notificationservice.tar
+          docker save tycho-shm/taskservice -o ./dockerimages/taskservice.tar
+
+      - name: Upload Docker images as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout docker compose file
+        with:
+          sparse-checkout: |
+            docker-compose.yml
+          sparse-checkout-cone-mode: false
+
+      - name: Create docker images folder
+        run: |
+          docker images
+          mkdir dockerimages
+
+      - name: Download Docker images artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+      - name: Load Docker images
+        run: |
+          docker load -i ./dockerimages/notificationservice.tar
+          docker load -i ./dockerimages/taskservice.tar
+          docker images
+
+      - name: Create and populate .env file
+        run: |
+          echo "RABBITMQ_HOSTNAME=rabbitmq" >> .env
+          echo "RABBITMQ_USERNAME=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+
+      - name: run docker containers
+        run: |
+          docker compose --profile all up -d
+          docker ps
+
+      - name: Make POST request
+        run: |
+          sleep 5s
+          curl 'http://localhost:6001/Task?Message=Hello%20world!' --request POST
+
+      - name: Validate Docker logs
+        run: |
+          docker compose --profile all logs notificationservice > notificationservicelogs.txt
+          if grep -q "NEW MESSAGE FROM MESSAGEBUS: Hello world!" notificationservicelogs.txt; then
+            echo "Log entry containing hello world message found!"
+          else
+            echo "Log entry containing hello world message not found!"
+            docker compose logs
+            exit 1
+          fi
+
+  push-images:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create docker images folder
+        run: |
+          docker images
+          mkdir dockerimages
+
+      - name: Download Docker images artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+      - name: Load Docker images
+        run: |
+          docker load -i ./dockerimages/notificationservice.tar
+          docker load -i ./dockerimages/taskservice.tar
+          docker images
+
+      - name: Tag docker images
+        run: |
+          docker tag tycho-shm/notificationservice ghcr.io/tycho-shm/notificationservice:latest
+          docker tag tycho-shm/taskservice ghcr.io/tycho-shm/taskservice:latest
+
+      - name: Push to github packages
+        run: |
+          docker push ghcr.io/tycho-shm/notificationservice:latest
+          docker push ghcr.io/tycho-shm/taskservice:latest
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+      - push-images
+    if: ${{ always() }}
+
+    steps:
+      - uses: geekyeggo/delete-artifact@v5
+        name: Cleanup artifacts
+        with:
+          name: |
+            docker-images
