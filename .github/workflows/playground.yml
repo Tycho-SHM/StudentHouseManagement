@@ -124,10 +124,15 @@ jobs:
           docker load -i ./dockerimages/taskservice.tar
           docker images
 
+      - name: Tag docker images
+        run: |
+          docker tag tycho-shm/notificationservice ghcr.io/tycho-shm/notificationservice:latest
+          docker tag tycho-shm/taskservice ghcr.io/tycho-shm/taskservice:latest
+
       - name: Push to github packages
         run: |
-          docker push tycho-shm/notificationservice
-          docker push tycho-shm/taskservice
+          docker push ghcr.io/tycho-shm/notificationservice:latest
+          docker push ghcr.io/tycho-shm/taskservice:latest
 
   cleanup:
     runs-on: ubuntu-latest
