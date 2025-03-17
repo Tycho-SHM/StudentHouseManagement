@@ -44,6 +44,13 @@ jobs:
     needs: build
 
     steps:
+      - uses: actions/checkout@v4
+        name: Checkout docker compose file
+        with:
+          sparse-checkout: |
+            docker-compose.yml
+          sparse-checkout-cone-mode: false
+
       - name: Create docker images folder
         run: |
           docker images
