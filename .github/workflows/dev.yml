@@ -1,9 +1,14 @@
-name: Testing playground
+name: Development
 
 on:
   push:
     branches:
-      - main
+      - '*'
+      - '!main'
+  pull_request:
+    types:
+      - opened
+      - reopened
 
 permissions:
   packages: write
@@ -95,51 +100,11 @@ jobs:
             exit 1
           fi
 
-  push-images:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create docker images folder
-        run: |
-          docker images
-          mkdir dockerimages
-
-      - name: Download Docker images artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-images
-          path: ./dockerimages/
-
-      - name: Load Docker images
-        run: |
-          docker load -i ./dockerimages/notificationservice.tar
-          docker load -i ./dockerimages/taskservice.tar
-          docker images
-
-      - name: Tag docker images
-        run: |
-          docker tag tycho-shm/notificationservice ghcr.io/tycho-shm/notificationservice:latest
-          docker tag tycho-shm/taskservice ghcr.io/tycho-shm/taskservice:latest
-
-      - name: Push to github packages
-        run: |
-          docker push ghcr.io/tycho-shm/notificationservice:latest
-          docker push ghcr.io/tycho-shm/taskservice:latest
-
   cleanup:
     runs-on: ubuntu-latest
     needs:
       - build
       - test
-      - push-images
     if: ${{ always() }}
 
     steps:
