@@ -82,9 +82,18 @@ jobs:
       - name: Make POST request
         run: |
           sleep 5s
-          docker compose logs notificationservice
           curl 'http://localhost:6001/Task?Message=Hello%20world!' --request POST
-          docker compose logs notificationservice
+
+      - name: Validate Docker logs
+        run: |
+          docker compose logs shm-notificationservice > notificationservicelogs.txt
+          if grep -q "NEW MESSAGE FROM MESSAGEBUS: Hello world!" notificationservicelogs.txt; then
+            echo "Log entry containing hello world message found!"
+          else
+            echo "Log entry containing hello world message not found!"
+            docker compose logs
+            exit 1
+          fi
 
   cleanup:
     runs-on: ubuntu-latest
