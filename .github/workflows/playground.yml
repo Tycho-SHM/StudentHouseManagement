@@ -29,6 +29,7 @@ jobs:
       - name: Docker compose build
         run: |
           docker compose --profile rabbitmq --profile services build
+          mkdir dockerimages
           docker save tycho-shm/notificationservice -o ./dockerimages/notificationservice.tar
           docker save tycho-shm/taskservice -o ./dockerimages/taskservice.tar
 
