@@ -38,3 +38,25 @@ jobs:
         with:
           name: docker-images
           path: ./dockerimages/
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Create docker images folder
+        run: |
+          docker images
+          mkdir dockerimages
+
+      - name: Download Docker images artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+      - name: Load Docker images
+        run: |
+          docker load -i ./dockerimages/notificationservice.tar
+          docker load -i ./dockerimages/taskservice.tar
+          docker images
