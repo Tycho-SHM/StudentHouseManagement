@@ -132,7 +132,7 @@ jobs:
             tycho-shm/notificationservice
             tycho-shm/taskservice
 
-      - name: Build and push
+      - name: Push to github packages
         uses: docker/build-push-action@v6
         with:
           push: true
@@ -144,6 +144,7 @@ jobs:
     needs:
       - build
       - test
+      - push-images
     if: ${{ always() }}
 
     steps:
