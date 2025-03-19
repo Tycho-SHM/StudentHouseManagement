@@ -37,6 +37,7 @@ jobs:
           mkdir dockerimages
           docker save tycho-shm/notificationservice -o ./dockerimages/notificationservice.tar
           docker save tycho-shm/taskservice -o ./dockerimages/taskservice.tar
+          docker save tycho-shm/apigateway -o ./dockerimages/apigateway.tar
 
       - name: Upload Docker images as artifact
         uses: actions/upload-artifact@v4
@@ -71,6 +72,7 @@ jobs:
         run: |
           docker load -i ./dockerimages/notificationservice.tar
           docker load -i ./dockerimages/taskservice.tar
+          docker load -i ./dockerimages/apigateway.tar
           docker images
 
       - name: Create and populate .env file
@@ -87,7 +89,7 @@ jobs:
       - name: Make POST request
         run: |
           sleep 5s
-          curl 'http://localhost:6001/Task?Message=Hello%20world!' --request POST
+          curl 'http://localhost:6001/tasks/task?Message=Hello%20world!' --request POST
 
       - name: Validate Docker logs
         run: |
