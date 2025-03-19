@@ -1,19 +1,31 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/todos/{id}",
-      "DownstreamScheme": "https",
+      "DownstreamPathTemplate": "/Settings",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "jsonplaceholder.typicode.com",
-          "Port": 443
+          "Host": "notificationservice",
+          "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/todos/{id}",
+      "UpstreamPathTemplate": "/notifications/settings",
       "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/Task",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "taskservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/tasks/task",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7204"
+    "BaseUrl": "http://localhost:8080"
   }
 }

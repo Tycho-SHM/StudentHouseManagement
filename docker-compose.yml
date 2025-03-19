@@ -17,6 +17,17 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+  apigateway:
+    build:
+      dockerfile: ./ApiGateway/Dockerfile
+    image: tycho-shm/apigateway
+    profiles:
+      - apigateway
+      - all
+    container_name: shm-apigateway
+    hostname: shm-apigateway
+    ports:
+      - 6001:8080
   taskservice:
     depends_on:
       rabbitmq:
@@ -34,7 +45,7 @@ services:
     container_name: shm-taskservice
     hostname: shm-taskservice
     ports:
-      - 6001:8080
+      - 6002:8080
     environment:
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
@@ -56,7 +67,7 @@ services:
     container_name: shm-notificationservice
     hostname: shm-notificationservice
     ports:
-      - 6002:8080
+      - 6003:8080
     environment:
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME

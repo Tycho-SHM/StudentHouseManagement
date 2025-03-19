@@ -33,8 +33,6 @@ if (app.Environment.IsDevelopment())
     app.UseCors("DevelopmentCors");
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.UseOcelot().Wait();
