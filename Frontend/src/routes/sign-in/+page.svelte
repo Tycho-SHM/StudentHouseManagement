@@ -7,7 +7,7 @@
     <div class="loading">Loading authentication...</div>
 {:else}
     {#if $isAuthenticated}
-        You're already logged in.
+        Loading Dashboard...
     {:else}
         <SignIn />
     {/if}

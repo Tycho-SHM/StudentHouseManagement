@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -24,6 +26,20 @@ else
 }
 
 builder.Services.AddOcelot();
+
+builder.Services.AddAuthentication().AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.Authority = builder.Configuration.GetSection("Clerk").GetValue<string>("Domain");
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration.GetSection("Clerk").GetValue<string>("Domain"),
+        ValidateLifetime = true,
+        ValidateAudience = false
+    };
+    options.MapInboundClaims = false;
+    options.RequireHttpsMetadata = true;
+});
 
 var app = builder.Build();
 
