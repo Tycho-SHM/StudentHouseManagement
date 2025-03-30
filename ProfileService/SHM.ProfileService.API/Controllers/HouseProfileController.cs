@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SHM.ProfileService.Abstractions.Repositories;
 using SHM.ProfileService.Model;
@@ -20,9 +21,16 @@ public class HouseProfileController : ControllerBase
     [HttpGet]
     public async Task<List<HouseProfile>> GetAll()
     {
+        _logger.LogInformation(HttpContext.User.ToString());
         return await _houseProfileRepository.GetAll();
     }
 
+    [HttpGet("{id}")]
+    public async Task<HouseProfile> GetById(Guid id)
+    {
+        return await _houseProfileRepository.GetById(id);
+    }
+    
     [HttpPost]
     public async Task<HouseProfile> Post(HouseProfile houseProfile)
     {

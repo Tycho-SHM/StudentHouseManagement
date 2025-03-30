@@ -27,6 +27,11 @@ public class HouseProfileRepository : IHouseProfileRepository
         return await _collection.AsQueryable().ToListAsync();
     }
 
+    public async Task<HouseProfile> GetById(Guid id)
+    {
+        return await _collection.Find(x => x.Id.Equals(id)).FirstOrDefaultAsync();
+    }
+
     public async Task<HouseProfile> Add(HouseProfile houseProfile)
     {
         await _collection.InsertOneAsync(houseProfile);
