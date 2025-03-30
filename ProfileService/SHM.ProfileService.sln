@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.ProfileService.API", "SHM.ProfileService.API\SHM.ProfileService.API.csproj", "{993C7DF0-3FE0-4175-907C-C3E28C202BF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.ProfileService.Abstractions", "SHM.ProfileService.Abstractions\SHM.ProfileService.Abstractions.csproj", "{D7D65B2F-A668-4009-80BA-B3F24991A414}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.ProfileService.Model", "SHM.ProfileService.Model\SHM.ProfileService.Model.csproj", "{7C7655BE-73C1-4995-9DF3-307D7B427E6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SHM.ProfileService.MongoDb", "SHM.ProfileService.MongoDb\SHM.ProfileService.MongoDb.csproj", "{2075D759-E4E6-4FD0-8B69-D3ECB1C11B6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{993C7DF0-3FE0-4175-907C-C3E28C202BF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{993C7DF0-3FE0-4175-907C-C3E28C202BF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{993C7DF0-3FE0-4175-907C-C3E28C202BF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{993C7DF0-3FE0-4175-907C-C3E28C202BF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D65B2F-A668-4009-80BA-B3F24991A414}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D65B2F-A668-4009-80BA-B3F24991A414}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D65B2F-A668-4009-80BA-B3F24991A414}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D65B2F-A668-4009-80BA-B3F24991A414}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C7655BE-73C1-4995-9DF3-307D7B427E6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C7655BE-73C1-4995-9DF3-307D7B427E6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C7655BE-73C1-4995-9DF3-307D7B427E6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C7655BE-73C1-4995-9DF3-307D7B427E6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2075D759-E4E6-4FD0-8B69-D3ECB1C11B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2075D759-E4E6-4FD0-8B69-D3ECB1C11B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2075D759-E4E6-4FD0-8B69-D3ECB1C11B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2075D759-E4E6-4FD0-8B69-D3ECB1C11B6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

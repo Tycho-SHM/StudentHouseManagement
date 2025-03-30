@@ -17,6 +17,20 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+  mongodb:
+    image: mongo:6
+    profiles:
+      - mongodb
+      - all
+    container_name: shm-mongodb
+    hostname: shm-mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./dockerdata/mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGODB_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
   apigateway:
     build:
       dockerfile: ./ApiGateway/Dockerfile
