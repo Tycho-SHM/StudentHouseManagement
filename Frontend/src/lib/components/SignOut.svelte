@@ -1,5 +1,6 @@
 <script>
     import { getClerk } from '$lib/clerk';
+    import Button from "$lib/components/ui/button/Button.svelte";
 
     async function handleSignOut() {
         const clerk = await getClerk();
@@ -9,6 +10,4 @@
     }
 </script>
 
-<button on:click={handleSignOut} class="sign-out-button">
-    Sign Out
-</button>
+<Button onclick={handleSignOut}>Sign Out</Button>

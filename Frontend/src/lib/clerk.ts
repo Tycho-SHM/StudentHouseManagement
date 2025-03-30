@@ -18,6 +18,7 @@ export async function initClerk() {
                     // Add more styling as needed
                 },
             },
+            signInFallbackRedirectUrl: '/sign-in'
         });
     }
     return clerk;

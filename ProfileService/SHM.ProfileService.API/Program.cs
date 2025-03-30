@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using SHM.ProfileService;
+using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.MongoDb;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddTransient<IUserProfileBusiness, UserProfileBusiness>();
 
 builder.Services.RegisterSHMMongoDb(options =>
 {
@@ -27,7 +31,7 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true,
             ValidateAudience = false
         };
-
+        options.MapInboundClaims = false;
         options.RequireHttpsMetadata = true;
     });
 

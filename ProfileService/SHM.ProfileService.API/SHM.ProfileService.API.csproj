@@ -15,6 +15,7 @@
     <ItemGroup>
       <ProjectReference Include="..\SHM.ProfileService.Abstractions\SHM.ProfileService.Abstractions.csproj" />
       <ProjectReference Include="..\SHM.ProfileService.MongoDb\SHM.ProfileService.MongoDb.csproj" />
+      <ProjectReference Include="..\SHM.ProfileService\SHM.ProfileService.csproj" />
     </ItemGroup>
 
 </Project>

@@ -11,6 +11,7 @@ public static class MongoDbServiceExtension
     {
         services.Configure(mongoDbOptions);
         services.TryAddSingleton<IHouseProfileRepository, HouseProfileRepository>();
+        services.TryAddSingleton<IUserProfileRepository, UserProfileRepository>();
 
         return services;
     }
