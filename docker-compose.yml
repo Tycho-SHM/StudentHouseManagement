@@ -86,3 +86,30 @@ services:
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
+  profileservice:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build:
+      dockerfile: ./ProfileService/Dockerfile
+      args:
+        GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
+        GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
+        GITHUB_TOKEN: $GITHUB_PACKAGES_TOKEN
+    image: tycho-shm/profileservice
+    profiles:
+      - services
+      - all
+    container_name: shm-profileservice
+    hostname: shm-profileservice
+    ports:
+      - 6004:8080
+    environment:
+      RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
+      RabbitMQ__Username: $RABBITMQ_USERNAME
+      RabbitMQ__Password: $RABBITMQ_PASSWORD
+      ProfileServiceDb__ConnectionString: $PROFILESERVICEDB_CONNECTIONSTRING
+      ProfileServiceDb__Database: $PROFILESERVICEDB_DATABASE
+      ProfileServiceDb__HouseProfileCollection: $PROFILESERVICEDB_HOUSEPROFILECOLLECTION
+      ProfileServiceDb__UserProfileCollection: $PROFILESERVICEDB_USERPROFILECOLLECTION
+      Clerk__Domain: $CLERK_DOMAIN

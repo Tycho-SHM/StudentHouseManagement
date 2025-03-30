@@ -13,7 +13,7 @@ builder.Services.AddTransient<IUserProfileBusiness, UserProfileBusiness>();
 
 builder.Services.RegisterSHMMongoDb(options =>
 {
-    builder.Configuration.GetSection("MongoDbProfileService").Bind(options);
+    builder.Configuration.GetSection("ProfileServiceDb").Bind(options);
 });
 
 builder.Services.AddAuthentication(options =>

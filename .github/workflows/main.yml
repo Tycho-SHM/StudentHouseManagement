@@ -19,9 +19,6 @@ jobs:
 
       - name: Create and populate .env file
         run: |
-          echo "RABBITMQ_HOSTNAME=rabbitmq" >> .env
-          echo "RABBITMQ_USERNAME=guest" >> .env
-          echo "RABBITMQ_PASSWORD=guest" >> .env
           echo "GITHUB_PACKAGES_ORGANIZATION=Tycho-SHM" >> .env
           echo "GITHUB_PACKAGES_USERNAME=Tycho-SHM" >> .env
           echo "GITHUB_PACKAGES_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> .env
@@ -33,6 +30,7 @@ jobs:
           docker save tycho-shm/notificationservice -o ./dockerimages/notificationservice.tar
           docker save tycho-shm/taskservice -o ./dockerimages/taskservice.tar
           docker save tycho-shm/apigateway -o ./dockerimages/apigateway.tar
+          docker save tycho-shm/profileservice -o ./dockerimages/profileservice.tar
 
       - name: Upload Docker images as artifact
         uses: actions/upload-artifact@v4
@@ -68,6 +66,7 @@ jobs:
           docker load -i ./dockerimages/notificationservice.tar
           docker load -i ./dockerimages/taskservice.tar
           docker load -i ./dockerimages/apigateway.tar
+          docker load -i ./dockerimages/profileservice.tar
           docker images
 
       - name: Create and populate .env file
@@ -75,6 +74,11 @@ jobs:
           echo "RABBITMQ_HOSTNAME=rabbitmq" >> .env
           echo "RABBITMQ_USERNAME=guest" >> .env
           echo "RABBITMQ_PASSWORD=guest" >> .env
+          echo "PROFILESERVICEDB_CONNECTIONSTRING=mongodb://admin:admin@mongodb:27017" >> .env
+          echo "PROFILESERVICEDB_DATABASE=shm_profileservice" >> .env
+          echo "PROFILESERVICEDB_HOUSEPROFILECOLLECTION=houseprofiles" >> .env
+          echo "PROFILESERVICEDB_USERPROFILECOLLECTION=userprofiles" >> .env
+          echo "CLERK_DOMAIN=https://pure-catfish-87.clerk.accounts.dev" >> .env
 
       - name: run docker containers
         run: |
@@ -125,6 +129,7 @@ jobs:
           docker load -i ./dockerimages/notificationservice.tar
           docker load -i ./dockerimages/taskservice.tar
           docker load -i ./dockerimages/apigateway.tar
+          docker load -i ./dockerimages/profileservice.tar
           docker images
 
       - name: Tag docker images
@@ -132,12 +137,14 @@ jobs:
           docker tag tycho-shm/notificationservice ghcr.io/tycho-shm/notificationservice:latest
           docker tag tycho-shm/taskservice ghcr.io/tycho-shm/taskservice:latest
           docker tag tycho-shm/apigateway ghcr.io/tycho-shm/apigateway:latest
+          docker tag tycho-shm/profileservice ghcr.io/tycho-shm/profileservice:latest
 
       - name: Push to github packages
         run: |
           docker push ghcr.io/tycho-shm/notificationservice:latest
           docker push ghcr.io/tycho-shm/taskservice:latest
           docker push ghcr.io/tycho-shm/apigateway:latest
+          docker push ghcr.io/tycho-shm/profileservice:latest
 
   cleanup:
     runs-on: ubuntu-latest
