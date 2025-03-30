@@ -23,6 +23,18 @@
       ],
       "UpstreamPathTemplate": "/tasks/task",
       "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profileservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/profiles/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
     }
   ],
   "GlobalConfiguration": {
