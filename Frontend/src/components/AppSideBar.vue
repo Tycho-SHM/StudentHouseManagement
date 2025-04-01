@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { Home, Search, LogIn  } from "lucide-vue-next"
+import { Home, Search, LogIn, ChevronUp  } from "lucide-vue-next"
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/vue'
 
@@ -14,21 +14,60 @@ import {
   SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
 } from '@/components/ui/sidebar'
 
+import SideBarUser from "@/components/sidebar/SideBarUser.vue";
+import {Button} from "@/components/ui/button";
+
+import { watch, ref, onMounted } from 'vue';
+
+import { useUser, useAuth } from '@clerk/vue';
+
+const { getToken } = useAuth()
+const { isSignedIn, user, isLoaded } = useUser();
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+import { userProfileStore } from "@/datastores/UserProfileStore.ts";
+
+async function loadUserProfile(newVal: any) {
+  if (newVal) {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/profiles/UserProfile/GetOwnProfile`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${await getToken.value()}`,
+          "Content-Type": "application/json"
+        }
+      });
+    if (!response.ok) {
+      console.error("Failed to fetch user profile:", response.statusText);
+      return;
+    }
+    userProfileStore.userProfile = await response.json();
+    if (userProfileStore.userProfile?.displayName == null) {
+      await router.push('/onboarding/profile-setup');
+      return;
+    }
+
+  } else {
+    watch(isSignedIn, loadUserProfile);
+  }
+}
+
+onMounted(() => {
+  loadUserProfile(isSignedIn.value);
+});
+
 const menuItems = [
   {
     title: "Home",
-    url: "/",
+    url: "/dashboard/home",
     icon: Home
   },
   {
     title: "About",
-    url: "/about",
+    url: "/dashboard/about",
     icon: Search
-  },
-  {
-    title: "Sign in",
-    url: "/account/sign-in",
-    icon: LogIn
   }
 ]
 </script>
@@ -48,17 +87,19 @@ const menuItems = [
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
     </SidebarContent>
+    <SidebarFooter>
+      <SignedIn>
+        <SideBarUser v-bind:userProfile="userProfileStore.userProfile" />
+      </SignedIn>
+      <SignedOut>
+        <RouterLink to="/account/sign-in">
+          <Button>Sign in</Button>
+        </RouterLink>
+      </SignedOut>
+    </SidebarFooter>
   </Sidebar>
 </template>

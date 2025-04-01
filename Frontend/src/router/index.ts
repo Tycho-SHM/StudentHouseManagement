@@ -18,9 +18,38 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/account/sign-in',
-      name: 'signin',
-      component: () => import('../views/account/SignInView.vue')
+      path: '/dashboard',
+      component: () => import('../views/dashboard/Layout.vue'),
+      children: [
+
+      ]
+    },
+    {
+      path: '/account',
+      component: () => import('../views/account/Layout.vue'),
+      children: [
+        {
+          path: 'sign-in',
+          name: 'signIn',
+          component: () => import('../views/account/SignInView.vue')
+        },
+        {
+          path: 'sign-up',
+          name: 'signUp',
+          component: () => import('../views/account/SignUpView.vue')
+        }
+      ]
+    },
+    {
+      path: '/onboarding',
+      component: () => import('../views/onboarding/Layout.vue'),
+      children: [
+        {
+          path: 'profile-setup',
+          name: 'profileSetup',
+          component: () => import('../views/onboarding/ProfileSetup.vue')
+        }
+      ]
     }
   ],
 })

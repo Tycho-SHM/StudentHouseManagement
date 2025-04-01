@@ -6,5 +6,5 @@ public interface IUserProfileBusiness
 {
     public Task<UserProfile> GetOrCreate(string userId);
     public Task<UserProfile?> GetById(Guid id);
-    public Task<UserProfile> Update(UserProfile userProfile);
+    public Task<UserProfile?> Update(UserProfile userProfile);
 }

@@ -37,9 +37,25 @@ public class UserProfileBusiness : IUserProfileBusiness
         return await _userProfileRepository.GetById(id);
     }
 
-    public async Task<UserProfile> Update(UserProfile userProfile)
+    public async Task<UserProfile?> Update(UserProfile userProfile)
     {
-        userProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
-        return await _userProfileRepository.Update(userProfile);
+        var oldUserProfile = await GetById(userProfile.Id);
+        if (oldUserProfile == null)
+        {
+            return null;
+        }
+
+        if (userProfile.DisplayName != null)
+        {
+            oldUserProfile.DisplayName = userProfile.DisplayName;
+        }
+
+        if (userProfile.ImgUrl != null)
+        {
+            oldUserProfile.ImgUrl = userProfile.ImgUrl;
+        }
+        
+        oldUserProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
+        return await _userProfileRepository.Update(oldUserProfile);
     }
 }

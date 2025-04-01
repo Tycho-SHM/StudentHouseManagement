@@ -3,6 +3,6 @@
 
 <template>
   <main>
-    This is the homeview
+    This is the dashboard homeview
   </main>
 </template>

@@ -34,7 +34,7 @@ public class UserProfileRepository : IUserProfileRepository
             return null;
         }
         
-        return await _collection.Find(x => x.Id.Equals(id)).FirstAsync();
+        return await _collection.Find(x => x.Id.Equals(id)).FirstOrDefaultAsync();
     }
 
     public async Task<UserProfile?> GetByUserId(string userId)
@@ -44,7 +44,7 @@ public class UserProfileRepository : IUserProfileRepository
             return null;
         }
         
-        return await _collection.Find(x => x.UserId.Equals(userId)).FirstAsync();
+        return await _collection.Find(x => x.UserId.Equals(userId)).FirstOrDefaultAsync();
     }
 
     public async Task<UserProfile> Add(UserProfile userProfile)

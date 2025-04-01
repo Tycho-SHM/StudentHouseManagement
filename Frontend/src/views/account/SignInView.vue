@@ -6,7 +6,7 @@ import { SignIn } from '@clerk/vue';
 
 <template>
   signin time!
-  <SignIn />
+  <SignIn fallback-redirect-url="/dashboard" />
 </template>
 
 <style scoped>
