@@ -38,6 +38,11 @@ services:
     profiles:
       - apigateway
       - all
+    volumes:
+      - ./ocelot.json:/app/ocelot.development.json
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Clerk__Domain: $CLERK_DOMAIN
     container_name: shm-apigateway
     hostname: shm-apigateway
     ports:
