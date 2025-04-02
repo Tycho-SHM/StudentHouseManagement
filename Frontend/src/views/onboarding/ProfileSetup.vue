@@ -16,13 +16,19 @@ import {useAuth, useUser} from '@clerk/vue'
 import {Skeleton} from "@/components/ui/skeleton";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
-import { userProfileStore } from "@/datastores/UserProfileStore.ts";
+import { useUserProfile } from "@/datastores/UserProfileStore.ts";
+import type {UserProfile} from "@/types/UserProfile.type.ts";
+const { userProfileStore } = useUserProfile();
+
 
 import { useRouter } from 'vue-router';
+import {ref} from "vue";
 const router = useRouter();
 
 const { user, isLoaded } = useUser()
 const { getToken } = useAuth()
+
+const nameInput = ref<string>('')
 
 async function UpdateProfile() {
   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/profiles/UserProfile`, {
@@ -32,10 +38,10 @@ async function UpdateProfile() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      id: userProfileStore.userProfile.id,
-      displayName: document.getElementById('userProfileDisplayName')!.value,
+      id: userProfileStore?.value?.id,
+      displayName: nameInput.value,
       imgUrl: user!.value!.imageUrl,
-      userId: userProfileStore.userProfile.userId,
+      userId: userProfileStore?.value?.userId,
     })
   });
   if (!response.ok) {
@@ -43,7 +49,7 @@ async function UpdateProfile() {
     return;
   }2
 
-  userProfileStore.userProfile = await response.json();
+  userProfileStore.value = await response.json();
 
   await router.push('/dashboard');
 }
@@ -62,15 +68,15 @@ async function UpdateProfile() {
           <div class="grid items-center w-full gap-4">
             <div class="flex justify-center">
               <Avatar class="h-32 w-32 rounded-lg">
-                <AvatarImage v-if="user?.hasImage" :src="user.imageUrl" :alt="user?.firstName" />
+                <AvatarImage v-if="user?.hasImage" :src="user.imageUrl" :alt="user?.firstName ?? ''" />
                 <AvatarFallback class="rounded-lg">
-                  {{ user?.firstName.charAt(0) }}
+                  {{ user?.firstName?.charAt(0) }}
                 </AvatarFallback>
               </Avatar>
             </div>
             <div class="flex flex-col space-y-1.5">
               <Label for="name">Name</Label>
-              <Input id="userProfileDisplayName" placeholder="Your name" :defaultValue="user?.firstName"/>
+              <Input id="userProfileDisplayName" placeholder="Your name" v-model="nameInput" :defaultValue="user?.firstName ?? ''"/>
             </div>
           </div>
         </form>

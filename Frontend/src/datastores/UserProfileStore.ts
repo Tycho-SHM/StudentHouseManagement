@@ -1,6 +1,10 @@
-import { reactive } from 'vue';
-import {UserProfile} from "@clerk/vue";
+import { ref } from 'vue';
+import type { UserProfile } from "@/types/UserProfile.type.ts";
 
-export const userProfileStore = reactive({
-  userProfile: UserProfile
-})
+const userProfileStore = ref<UserProfile | null>(null);
+
+export function useUserProfile() {
+  return {
+    userProfileStore
+  };
+}

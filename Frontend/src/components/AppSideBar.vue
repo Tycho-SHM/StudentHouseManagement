@@ -17,7 +17,7 @@ import {
 import SideBarUser from "@/components/sidebar/SideBarUser.vue";
 import {Button} from "@/components/ui/button";
 
-import { watch, ref, onMounted } from 'vue';
+import { watch, ref, onMounted, computed } from 'vue';
 
 import { useUser, useAuth } from '@clerk/vue';
 
@@ -27,7 +27,10 @@ const { isSignedIn, user, isLoaded } = useUser();
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
-import { userProfileStore } from "@/datastores/UserProfileStore.ts";
+import { useUserProfile } from "@/datastores/UserProfileStore.ts";
+import type {UserProfile} from "@/types/UserProfile.type.ts";
+
+const { userProfileStore } = useUserProfile();
 
 async function loadUserProfile(newVal: any) {
   if (newVal) {
@@ -43,8 +46,8 @@ async function loadUserProfile(newVal: any) {
       console.error("Failed to fetch user profile:", response.statusText);
       return;
     }
-    userProfileStore.userProfile = await response.json();
-    if (userProfileStore.userProfile?.displayName == null) {
+    userProfileStore.value = await response.json();
+    if (userProfileStore.value?.displayName == null) {
       await router.push('/onboarding/profile-setup');
       return;
     }
@@ -52,6 +55,8 @@ async function loadUserProfile(newVal: any) {
   } else {
     watch(isSignedIn, loadUserProfile);
   }
+
+  console.log(userProfileStore?.value);
 }
 
 onMounted(() => {
@@ -61,12 +66,12 @@ onMounted(() => {
 const menuItems = [
   {
     title: "Home",
-    url: "/dashboard/home",
+    url: "/dashboard",
     icon: Home
   },
   {
     title: "About",
-    url: "/dashboard/about",
+    url: "/dashboard",
     icon: Search
   }
 ]
@@ -93,7 +98,7 @@ const menuItems = [
     </SidebarContent>
     <SidebarFooter>
       <SignedIn>
-        <SideBarUser v-bind:userProfile="userProfileStore.userProfile" />
+        <SideBarUser v-if="userProfileStore" :userProfile="userProfileStore" />
       </SignedIn>
       <SignedOut>
         <RouterLink to="/account/sign-in">

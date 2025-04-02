@@ -36,9 +36,12 @@ import { useClerk } from '@clerk/vue'
 const clerk = useClerk();
 
 import type {UserProfile} from "@/types/UserProfile.type.ts";
-const props = defineProps<{
-  userProfile: UserProfile | null
+
+defineProps<{
+  userProfile?: UserProfile
 }>()
+
+
 const { isMobile } = useSidebar()
 </script>
 <template>
