@@ -1,4 +1,7 @@
 {
+  "Clerk": {
+    "Domain": "https://clerk.shm.tycho.dev"
+  },
   "Routes": [
     {
       "DownstreamPathTemplate": "/Settings",
@@ -23,6 +26,25 @@
       ],
       "UpstreamPathTemplate": "/tasks/task",
       "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profileservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/profiles/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "Authorization": "{Authorization}"
+      }
     }
   ],
   "GlobalConfiguration": {

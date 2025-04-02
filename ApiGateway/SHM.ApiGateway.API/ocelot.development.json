@@ -1,4 +1,7 @@
 {
+  "Clerk": {
+    "Domain": "https://pure-catfish-87.clerk.accounts.dev"
+  },
   "Routes": [
     {
       "DownstreamPathTemplate": "/settings",
@@ -23,6 +26,25 @@
       ],
       "UpstreamPathTemplate": "/tasks/task",
       "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7158
+        }
+      ],
+      "UpstreamPathTemplate": "/profiles/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "AddHeadersToRequest": {
+        "Authorization": "{Authorization}"
+      }
     }
   ],
   "GlobalConfiguration": {

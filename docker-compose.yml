@@ -17,6 +17,20 @@ services:
       timeout: 5s
       retries: 5
       start_period: 5s
+  mongodb:
+    image: mongo:6
+    profiles:
+      - mongodb
+      - all
+    container_name: shm-mongodb
+    hostname: shm-mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - ./dockerdata/mongodb:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGODB_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
   apigateway:
     build:
       dockerfile: ./ApiGateway/Dockerfile
@@ -24,6 +38,11 @@ services:
     profiles:
       - apigateway
       - all
+    volumes:
+      - ./ocelot.json:/app/ocelot.development.json
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      Clerk__Domain: $CLERK_DOMAIN
     container_name: shm-apigateway
     hostname: shm-apigateway
     ports:
@@ -72,3 +91,30 @@ services:
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
+  profileservice:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    build:
+      dockerfile: ./ProfileService/Dockerfile
+      args:
+        GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
+        GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
+        GITHUB_TOKEN: $GITHUB_PACKAGES_TOKEN
+    image: tycho-shm/profileservice
+    profiles:
+      - services
+      - all
+    container_name: shm-profileservice
+    hostname: shm-profileservice
+    ports:
+      - 6004:8080
+    environment:
+      RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
+      RabbitMQ__Username: $RABBITMQ_USERNAME
+      RabbitMQ__Password: $RABBITMQ_PASSWORD
+      ProfileServiceDb__ConnectionString: $PROFILESERVICEDB_CONNECTIONSTRING
+      ProfileServiceDb__Database: $PROFILESERVICEDB_DATABASE
+      ProfileServiceDb__HouseProfileCollection: $PROFILESERVICEDB_HOUSEPROFILECOLLECTION
+      ProfileServiceDb__UserProfileCollection: $PROFILESERVICEDB_USERPROFILECOLLECTION
+      Clerk__Domain: $CLERK_DOMAIN
