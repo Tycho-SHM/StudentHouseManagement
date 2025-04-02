@@ -34,14 +34,14 @@ async function UpdateProfile() {
     body: JSON.stringify({
       id: userProfileStore.userProfile.id,
       displayName: document.getElementById('userProfileDisplayName')!.value,
-      imgUrl: user.imageUrl,
+      imgUrl: user!.value!.imageUrl,
       userId: userProfileStore.userProfile.userId,
     })
   });
   if (!response.ok) {
     console.error("Failed to update profile:", response.statusText);
     return;
-  }
+  }2
 
   userProfileStore.userProfile = await response.json();
 

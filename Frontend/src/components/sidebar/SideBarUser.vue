@@ -42,7 +42,7 @@ const props = defineProps<{
 const { isMobile } = useSidebar()
 </script>
 <template>
-  <SidebarMenu v-if="userProfile != null">
+  <SidebarMenu v-if="userProfile?.displayName != null">
     <SidebarMenuItem>
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
