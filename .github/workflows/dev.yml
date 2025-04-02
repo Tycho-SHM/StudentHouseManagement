@@ -53,6 +53,7 @@ jobs:
         with:
           sparse-checkout: |
             docker-compose.yml
+            ocelot.json
           sparse-checkout-cone-mode: false
 
       - name: Create docker images folder
