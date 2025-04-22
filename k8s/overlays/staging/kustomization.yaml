@@ -6,4 +6,10 @@ resources:
   - ../../base
   - profileservice/profileservice-config.yaml
   - apigateway/apigateway-config.yaml
-  - cloudflared-patch.yaml
+
+patches:
+  - target:
+      version: v1
+      kind: ConfigMap
+      name: cloudflared
+    path: cloudflared-patch.yaml
