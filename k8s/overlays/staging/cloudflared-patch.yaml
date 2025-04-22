@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cloudflared
-data:
-  config.yaml: |
-    ingress:
-      - hostname: staging-api-shm.tycho.dev
-        service: http://staging-shm-apigateway:8080
