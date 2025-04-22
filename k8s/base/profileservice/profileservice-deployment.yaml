@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shm-profileservice
+  labels:
+    app: shm-profileservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: shm-profileservice
+  template:
+    metadata:
+      labels:
+        app: shm-profileservice
+    spec:
+      imagePullSecrets:
+      - name: github-registry-secret
+      containers:
+      - name: shm-profileservice
+        image: ghcr.io/tycho-shm/profileservice
+        ports:
+        - containerPort: 8080
+        env:
+#        - name: RabbitMQ__Hostname
+#          valueFrom:
+#            secretKeyRef:
+#              name: profileservice-secrets
+#              key: rabbitmq-hostname
+#        - name: RabbitMQ__Username
+#          valueFrom:
+#            secretKeyRef:
+#              name: profileservice-secrets
+#              key: rabbitmq-username
+#        - name: RabbitMQ__Password
+#          valueFrom:
+#            secretKeyRef:
+#              name: profileservice-secrets
+#              key: rabbitmq-password
+        - name: ProfileServiceDb__ConnectionString
+          valueFrom:
+            secretKeyRef:
+              name: profileservice-secrets
+              key: db-connectionstring
+        - name: ProfileServiceDb__Database
+          valueFrom:
+            configMapKeyRef:
+              name: profileservice-config
+              key: db-database
+        - name: ProfileServiceDb__HouseProfileCollection
+          valueFrom:
+            configMapKeyRef:
+              name: profileservice-config
+              key: db-houseprofilecollection
+        - name: ProfileServiceDb__UserProfileCollection
+          valueFrom:
+            configMapKeyRef:
+              name: profileservice-config
+              key: db-userprofilecollection
+        - name: Clerk__Domain
+          valueFrom:
+            configMapKeyRef:
+              name: profileservice-config
+              key: clerk-domain

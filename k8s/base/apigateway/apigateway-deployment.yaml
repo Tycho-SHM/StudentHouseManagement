@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shm-apigateway
+  labels:
+    app: shm-apigateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shm-apigateway
+  template:
+    metadata:
+      labels:
+        app: shm-apigateway
+    spec:
+      imagePullSecrets:
+      - name: github-registry-secret
+      containers:
+      - name: shm-apigateway
+        image: ghcr.io/tycho-shm/apigateway
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: apigateway-config
+              key: aspnet-environment
+        - name: Clerk__Domain
+          valueFrom:
+            configMapKeyRef:
+              name: apigateway-config
+              key: clerk-domain
+        volumeMounts:
+        - name: ocelot-config
+          mountPath: /app/ocelot.development.json
+          subPath: ocelot.development.json
+      volumes:
+      - name: ocelot-config
+        configMap:
+          name: ocelot-config

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shm-apigateway
+spec:
+  selector:
+    app: shm-apigateway
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP

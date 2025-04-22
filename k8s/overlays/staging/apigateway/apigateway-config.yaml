@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apigateway-config
+data:
+  clerk-domain: "https://pure-catfish-87.clerk.accounts.dev"
+  aspnet-environment: "Development"

@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ocelot-config
+data:
+  ocelot.development.json: |
+    {
+      "Routes": [
+        {
+          "DownstreamPathTemplate": "/settings",
+          "DownstreamScheme": "http",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "notificationservice",
+              "Port": 8080
+            }
+          ],
+          "UpstreamPathTemplate": "/notifications/settings",
+          "UpstreamHttpMethod": [ "Get" ]
+        },
+        {
+          "DownstreamPathTemplate": "/Task",
+          "DownstreamScheme": "http",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "taskservice",
+              "Port": 8080
+            }
+          ],
+          "UpstreamPathTemplate": "/tasks/task",
+          "UpstreamHttpMethod": [ "Get", "Post" ]
+        },
+        {
+          "DownstreamPathTemplate": "/{url}",
+          "DownstreamScheme": "http",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "shm-profileservice",
+              "Port": 8080
+            }
+          ],
+          "UpstreamPathTemplate": "/profiles/{url}",
+          "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+          "AuthenticationOptions": {
+            "AuthenticationProviderKey": "Bearer",
+            "AllowedScopes": []
+          },
+          "AddHeadersToRequest": {
+            "Authorization": "{Authorization}"
+          }
+        }
+      ],
+      "GlobalConfiguration": {
+        "BaseUrl": "https://staging-api-shm.tycho.dev"
+      }
+    }
