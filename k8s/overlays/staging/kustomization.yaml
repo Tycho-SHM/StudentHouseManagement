@@ -3,7 +3,7 @@ kind: Kustomization
 
 namePrefix: staging-
 resources:
-  - ../../base/kustomization.yaml
+  - ../../base
   - profileservice/profileservice-config.yaml
   - apigateway/apigateway-config.yaml
   - cloudflared-patch.yaml
