@@ -11,7 +11,7 @@ data:
           "DownstreamScheme": "http",
           "DownstreamHostAndPorts": [
             {
-              "Host": "shm-otificationservice",
+              "Host": "shm-notificationservice",
               "Port": 8080
             }
           ],
