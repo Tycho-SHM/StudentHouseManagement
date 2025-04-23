@@ -6,7 +6,7 @@ resources:
   - apigateway/apigateway-service.yaml
   - profileservice/profileservice-deployment.yaml
   - profileservice/profileservice-service.yaml
-  - notificationservice/notificationservice-service.yaml
+  - notificationservice/notificationservice-deployment.yaml
   - notificationservice/notificationservice-service.yaml
   - cloudflared.yaml
   - rabbitmq.yaml
