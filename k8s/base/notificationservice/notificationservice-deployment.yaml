@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shm-notificationservice
+  labels:
+    app: shm-notificationservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: shm-notificationservice
+  template:
+    metadata:
+      labels:
+        app: shm-notificationservice
+    spec:
+      imagePullSecrets:
+      - name: github-registry-secret
+      containers:
+      - name: shm-notificationservice
+        image: ghcr.io/tycho-shm/notificationservice
+        ports:
+        - containerPort: 8080
+        env:
+        - name: RabbitMQ__Hostname
+          valueFrom:
+            secretKeyRef:
+              name: shm-staging-rabbitmq-default-user
+              key: host
+        - name: RabbitMQ__Username
+          valueFrom:
+            secretKeyRef:
+              name: shm-staging-rabbitmq-default-user
+              key: username
+        - name: RabbitMQ__Password
+          valueFrom:
+            secretKeyRef:
+              name: shm-staging-rabbitmq-default-user
+              key: password
+#        - name: notificationserviceDb__ConnectionString
+#          valueFrom:
+#            secretKeyRef:
+#              name: notificationservice-secrets
+#              key: db-connectionstring
+#        - name: notificationserviceDb__Database
+#          valueFrom:
+#            configMapKeyRef:
+#              name: notificationservice-config
+#              key: db-database
+#        - name: notificationserviceDb__HouseProfileCollection
+#          valueFrom:
+#            configMapKeyRef:
+#              name: notificationservice-config
+#              key: db-houseprofilecollection
+#        - name: notificationserviceDb__UserProfileCollection
+#          valueFrom:
+#            configMapKeyRef:
+#              name: notificationservice-config
+#              key: db-userprofilecollection
+#        - name: Clerk__Domain
+#          valueFrom:
+#            configMapKeyRef:
+#              name: notificationservice-config
+#              key: clerk-domain

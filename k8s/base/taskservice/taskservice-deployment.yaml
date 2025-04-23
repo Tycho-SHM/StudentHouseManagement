@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shm-taskservice
+  labels:
+    app: shm-taskservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: shm-taskservice
+  template:
+    metadata:
+      labels:
+        app: shm-taskservice
+    spec:
+      imagePullSecrets:
+      - name: github-registry-secret
+      containers:
+      - name: shm-taskservice
+        image: ghcr.io/tycho-shm/taskservice
+        ports:
+        - containerPort: 8080
+        env:
+        - name: RabbitMQ__Hostname
+          valueFrom:
+            secretKeyRef:
+              name: staging-shm-staging-rabbitmq-default-user
+              key: host
+        - name: RabbitMQ__Username
+          valueFrom:
+            secretKeyRef:
+              name: staging-shm-staging-rabbitmq-default-user
+              key: username
+        - name: RabbitMQ__Password
+          valueFrom:
+            secretKeyRef:
+              name: staging-shm-staging-rabbitmq-default-user
+              key: password
+#        - name: taskserviceDb__ConnectionString
+#          valueFrom:
+#            secretKeyRef:
+#              name: taskservice-secrets
+#              key: db-connectionstring
+#        - name: taskserviceDb__Database
+#          valueFrom:
+#            configMapKeyRef:
+#              name: taskservice-config
+#              key: db-database
+#        - name: taskserviceDb__HouseProfileCollection
+#          valueFrom:
+#            configMapKeyRef:
+#              name: taskservice-config
+#              key: db-houseprofilecollection
+#        - name: taskserviceDb__UserProfileCollection
+#          valueFrom:
+#            configMapKeyRef:
+#              name: taskservice-config
+#              key: db-userprofilecollection
+#        - name: Clerk__Domain
+#          valueFrom:
+#            configMapKeyRef:
+#              name: taskservice-config
+#              key: clerk-domain

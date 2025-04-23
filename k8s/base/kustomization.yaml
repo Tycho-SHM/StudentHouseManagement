@@ -4,8 +4,7 @@ kind: Kustomization
 resources:
   - apigateway/apigateway-deployment.yaml
   - apigateway/apigateway-service.yaml
-  - apigateway/apigateway-ocelotjson.yaml
-  - profileservice/profileservice-deployment.yaml
-  - profileservice/profileservice-service.yaml
+  - profileservice/notificationservice-deployment.yaml
+  - profileservice/notificationservice-service.yaml
   - cloudflared.yaml
   - rabbitmq.yaml
