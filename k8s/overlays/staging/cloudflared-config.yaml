@@ -27,6 +27,6 @@ data:
     # E.g. `cloudflared tunnel route dns example-tunnel tunnel.example.com`.
     ingress:
       - hostname: staging-api-shm.tycho.dev
-        service: http://staging-shm-apigateway:8080
+        service: http://shm-apigateway:8080
       # This rule matches any traffic which didn't match a previous rule, and responds with HTTP 404.
       - service: http_status:404
