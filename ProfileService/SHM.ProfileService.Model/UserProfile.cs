@@ -7,6 +7,7 @@ public class UserProfile
 {
     [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid Id { get; set; } = Guid.NewGuid();
+    public bool Deleted { get; set; }
     public string? ImgUrl { get; set; }
     public string? UserId { get; set; }
     public DateTime LastUpdatedDateTimeUtc { get; set; } = DateTime.UtcNow;

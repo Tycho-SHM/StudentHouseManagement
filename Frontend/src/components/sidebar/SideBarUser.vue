@@ -23,12 +23,10 @@ import {
 } from '@/components/ui/sidebar'
 
 import {
-  BadgeCheck,
+  UserCog,
   Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from 'lucide-vue-next'
 
 import { useClerk } from '@clerk/vue'
@@ -61,7 +59,7 @@ const { isMobile } = useSidebar()
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-semibold">{{ userProfile.displayName }}</span>
-              <span class="truncate text-xs">email@example.com</span>
+<!--              <span class="truncate text-xs">email@example.com</span>-->
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
@@ -82,27 +80,18 @@ const { isMobile } = useSidebar()
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
                 <span class="truncate font-semibold">{{ userProfile.displayName }}</span>
-                <span class="truncate text-xs">email@example.com</span>
+<!--                <span class="truncate text-xs">email@example.com</span>-->
               </div>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Sparkles />
-              Upgrade to Pro
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <BadgeCheck />
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard />
-              Billing
-            </DropdownMenuItem>
+            <RouterLink to="/dashboard/settings/account">
+              <DropdownMenuItem class="hover:cursor-pointer">
+                <UserCog />
+                Account
+              </DropdownMenuItem>
+            </RouterLink>
             <DropdownMenuItem>
               <Bell />
               Notifications

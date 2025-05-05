@@ -28,6 +28,18 @@
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
     {
+      "DownstreamPathTemplate": "/webhook/{url}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7158
+        }
+      ],
+      "UpstreamPathTemplate": "/profiles/webhook/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+    },
+    {
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [

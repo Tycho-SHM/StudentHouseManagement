@@ -47,7 +47,7 @@ async function UpdateProfile() {
   if (!response.ok) {
     console.error("Failed to update profile:", response.statusText);
     return;
-  }2
+  }
 
   userProfileStore.value = await response.json();
 

@@ -21,7 +21,17 @@ const router = createRouter({
       path: '/dashboard',
       component: () => import('../views/dashboard/Layout.vue'),
       children: [
-
+        {
+          path: 'settings',
+          name: 'settings',
+          children: [
+            {
+              path: 'account',
+              name: 'accountSettings',
+              component: () => import('../views/dashboard/settings/AccountView.vue')
+            }
+          ]
+        }
       ]
     },
     {

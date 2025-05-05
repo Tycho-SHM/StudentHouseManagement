@@ -58,4 +58,23 @@ public class UserProfileBusiness : IUserProfileBusiness
         oldUserProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
         return await _userProfileRepository.Update(oldUserProfile);
     }
+
+    public async Task<bool> Delete(string userId)
+    {
+        var userProfile = await _userProfileRepository.GetByUserId(userId);
+        if (userProfile == null)
+        {
+            return false;
+        }
+
+        userProfile.DisplayName = "Deleted Profile";
+        userProfile.ImgUrl = null;
+        userProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
+        
+        userProfile.Deleted = true;
+
+        var updatedUserProfile = await _userProfileRepository.Update(userProfile);
+
+        return updatedUserProfile.Deleted;
+    }
 }
