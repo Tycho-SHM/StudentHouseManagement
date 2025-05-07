@@ -25,6 +25,18 @@
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
     {
+      "DownstreamPathTemplate": "/webhook/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profileservice",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/profiles/webhook/{url}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ]
+    },
+    {
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

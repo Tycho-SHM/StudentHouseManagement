@@ -1,10 +1,9 @@
-using System.Text.Json;
 using Clerk.BackendAPI;
 using Clerk.BackendAPI.Models.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
-using MongoDB.Bson;
-using SHM.ProfileService.Model;
+using Svix;
+using Svix.Models;
 
 namespace SHM.E2ETest.User;
 
@@ -19,7 +18,11 @@ public class UserTest : PlaywrightTest
     private string _testProfileRandomValue = Guid.NewGuid().ToString();
 
     private static ClerkBackendApi _clerkSdk;
-    private bool userDeleted = false;
+    private bool userDeleted;
+    
+    private static SvixClient _svixClient;
+    private IngestSourceOut _ingestSource;
+    private IngestEndpointOut _ingestEndpoint;
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext testContext)
@@ -30,11 +33,21 @@ public class UserTest : PlaywrightTest
             .Build();
 
         _clerkSdk = new ClerkBackendApi(_configuration["ClerkApiSecret"]);
+        _svixClient = new SvixClient(_configuration["SvixAuthToken"], new SvixOptions(_configuration["SvixApiUrl"]));
     }
 
     [TestInitialize]
     public async Task Initialize()
     {
+        var ingestSources = await _svixClient.Ingest.Source.ListAsync();
+
+        _ingestSource = ingestSources.Data.First(x => x.Name.Equals("clerk-dev"));
+
+        _ingestEndpoint = await _svixClient.Ingest.Endpoint.CreateAsync(_ingestSource.Id, new IngestEndpointIn()
+        {
+            Url = _configuration["NgrokEndpoint"] + "/profiles/webhook/DeleteUser",
+        });
+        
         var userCreationRequest = new CreateUserRequestBody()
         {
             FirstName = $"E2E-UserTest-{_testProfileRandomValue}",
@@ -119,6 +132,8 @@ public class UserTest : PlaywrightTest
     [TestCleanup]
     public async Task Cleanup()
     {
+        await _svixClient.Ingest.Endpoint.DeleteAsync(_ingestSource.Id, _ingestEndpoint.Id);
+        
         await _profileServiceApi.DisposeAsync();
 
         if (!userDeleted && _user != null)

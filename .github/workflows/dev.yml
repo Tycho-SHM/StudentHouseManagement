@@ -85,6 +85,12 @@ jobs:
           echo "PROFILESERVICEDB_HOUSEPROFILECOLLECTION=houseprofiles" >> .env
           echo "PROFILESERVICEDB_USERPROFILECOLLECTION=userprofiles" >> .env
           echo "CLERK_DOMAIN=https://pure-catfish-87.clerk.accounts.dev" >> .env
+          echo "CLERK_DOMAIN=${{ secrets.CLERK_DOMAIN }}" >> .env
+          echo "TEST_CLERKAPISECRET=${{ secrets.TEST_CLERKAPISECRET }}" >> .env
+          echo "TEST_APIGATEWAYURL=http://shm-apigateway:8080" >> .env
+          echo "TEST_SVIXAUTHTOKEN=${{ secrets.TEST_SVIXAUTHTOKEN }}" >> .env
+          echo "TEST_SVIXAPIRUL=${{ secrets.TEST_SVIXAPIRUL }}" >> .env
+          echo "TEST_NGROKENDPOINT=${{ secrets.AAJKLFJLKJELKFW }}" >> .env
 
       - name: run docker containers
         run: |
