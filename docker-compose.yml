@@ -119,10 +119,25 @@ services:
       ProfileServiceDb__HouseProfileCollection: $PROFILESERVICEDB_HOUSEPROFILECOLLECTION
       ProfileServiceDb__UserProfileCollection: $PROFILESERVICEDB_USERPROFILECOLLECTION
       Clerk__Domain: $CLERK_DOMAIN
+  ngrok:
+    profiles:
+      - testing
+      - ngrok
+    image: ngrok/ngrok:latest
+    command:
+      - "http"
+      - "http://apigateway:8080"
+    environment:
+      NGROK_AUTHTOKEN: $TEST_NGROK_AUTHTOKEN
+    container_name: shm-ngrok
+    hostname: shm-ngrok
+    ports:
+      - 4040:4040
   e2etesting:
     depends_on:
       - profileservice
       - mongodb
+      - ngrok
     build:
       dockerfile: ./e2eTesting/Dockerfile
       args:
@@ -142,3 +157,4 @@ services:
       SvixAuthToken: $TEST_SVIXAUTHTOKEN
       SvixApiUrl: $TEST_SVIXAPIRUL
       NgrokEndpoint: $TEST_NGROKENDPOINT
+      RunningStandalone: false

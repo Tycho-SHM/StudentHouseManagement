@@ -36,6 +36,7 @@ jobs:
           docker save tycho-shm/taskservice -o ./dockerimages/taskservice.tar
           docker save tycho-shm/apigateway -o ./dockerimages/apigateway.tar
           docker save tycho-shm/profileservice -o ./dockerimages/profileservice.tar
+          docker save tycho-shm/e2etesting -o ./dockerimages/e2etesting.tar
 
       - name: Upload Docker images as artifact
         uses: actions/upload-artifact@v4
@@ -73,6 +74,7 @@ jobs:
           docker load -i ./dockerimages/taskservice.tar
           docker load -i ./dockerimages/apigateway.tar
           docker load -i ./dockerimages/profileservice.tar
+          docker load -i ./dockerimages/e2etesting.tar
           docker images
 
       - name: Create and populate .env file
@@ -90,28 +92,17 @@ jobs:
           echo "TEST_APIGATEWAYURL=http://shm-apigateway:8080" >> .env
           echo "TEST_SVIXAUTHTOKEN=${{ secrets.TEST_SVIXAUTHTOKEN }}" >> .env
           echo "TEST_SVIXAPIRUL=${{ secrets.TEST_SVIXAPIRUL }}" >> .env
-          echo "TEST_NGROKENDPOINT=${{ secrets.AAJKLFJLKJELKFW }}" >> .env
 
       - name: run docker containers
         run: |
-          docker compose --profile all up -d
-          docker ps
+          docker compose --profile all --profile testing up --abort-on-container-exit shm-e2etesting
 
-      - name: Make POST request
-        run: |
-          sleep 5s
-          curl 'http://localhost:6001/tasks/task?Message=Hello%20world!' --request POST
-
-      - name: Validate Docker logs
-        run: |
-          docker compose --profile all logs notificationservice > notificationservicelogs.txt
-          if grep -q "NEW MESSAGE FROM MESSAGEBUS: Hello world!" notificationservicelogs.txt; then
-            echo "Log entry containing hello world message found!"
-          else
-            echo "Log entry containing hello world message not found!"
-            docker compose logs
-            exit 1
-          fi
+      - name: Parse Trx files
+        uses: NasAmin/trx-parser@v0.1
+        id: trx-parser
+        with:
+          TRX_PATH: ${{ github.workspace }}/dockerdata/e2etesting/testresults #This should be the path to your TRX files
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   cleanup:
     runs-on: ubuntu-latest

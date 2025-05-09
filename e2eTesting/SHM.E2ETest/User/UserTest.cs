@@ -1,9 +1,12 @@
+using System.Net.Http.Headers;
+using System.Xml.Linq;
 using Clerk.BackendAPI;
 using Clerk.BackendAPI.Models.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using Svix;
 using Svix.Models;
+using Environment = System.Environment;
 
 namespace SHM.E2ETest.User;
 
@@ -39,13 +42,23 @@ public class UserTest : PlaywrightTest
     [TestInitialize]
     public async Task Initialize()
     {
+        string ngrokUrl;
+        if(_configuration["RunningStandalone"].Equals("true"))
+        {
+            ngrokUrl = _configuration["NgrokEndpoint"];
+        }
+        else
+        {
+            ngrokUrl = await GetPublicUrlFromApiAsync("http://shm-ngrok:4040/api/tunnels");
+        }
+        
         var ingestSources = await _svixClient.Ingest.Source.ListAsync();
 
         _ingestSource = ingestSources.Data.First(x => x.Name.Equals("clerk-dev"));
 
         _ingestEndpoint = await _svixClient.Ingest.Endpoint.CreateAsync(_ingestSource.Id, new IngestEndpointIn()
         {
-            Url = _configuration["NgrokEndpoint"] + "/profiles/webhook/DeleteUser",
+            Url = ngrokUrl + "/profiles/webhook/DeleteUser",
         });
         
         var userCreationRequest = new CreateUserRequestBody()
@@ -140,5 +153,26 @@ public class UserTest : PlaywrightTest
         {
             await _clerkSdk.Users.DeleteAsync(_user.Id);
         }
+    }
+    
+    public static async Task<string> GetPublicUrlFromApiAsync(string apiUrl)
+    {
+        using var client = new HttpClient();
+        
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+        
+        var response = await client.GetAsync(apiUrl);
+        response.EnsureSuccessStatusCode(); // Throw an exception if the status code is not successful
+
+        var xmlString = await response.Content.ReadAsStringAsync();
+
+        var doc = XDocument.Parse(xmlString);
+
+        // Find the first Tunnels element and then the PublicURL element within it
+        var publicUrlElement = doc.Descendants("Tunnels").FirstOrDefault()?.Element("PublicURL");
+
+        var publicUrl = publicUrlElement?.Value;
+
+        return publicUrl ?? null; // Or throw an exception if the element is expected
     }
 }
