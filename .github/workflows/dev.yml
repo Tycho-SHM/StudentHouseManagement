@@ -98,7 +98,7 @@ jobs:
           docker compose --profile all --profile testing up --abort-on-container-exit shm-e2etesting
 
       - name: Parse Trx files
-        uses: NasAmin/trx-parser@v0.1
+        uses: NasAmin/trx-parser@v0.6.0
         id: trx-parser
         with:
           TRX_PATH: ${{ github.workspace }}/dockerdata/e2etesting/testresults #This should be the path to your TRX files
