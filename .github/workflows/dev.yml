@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,44 +38,44 @@ jobs:
           docker save tycho-shm/profileservice -o ./dockerimages/profileservice.tar
           docker save tycho-shm/e2etesting -o ./dockerimages/e2etesting.tar
 
-      - name: Upload Docker images as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-images
-          path: ./dockerimages/
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - uses: actions/checkout@v4
-        name: Checkout docker compose file
-        with:
-          sparse-checkout: |
-            docker-compose.yml
-            ocelot.json
-          sparse-checkout-cone-mode: false
-
-      - name: Create docker images folder
-        run: |
-          docker images
-          mkdir dockerimages
-
-      - name: Download Docker images artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-images
-          path: ./dockerimages/
-
-      - name: Load Docker images
-        run: |
-          docker load -i ./dockerimages/notificationservice.tar
-          docker load -i ./dockerimages/taskservice.tar
-          docker load -i ./dockerimages/apigateway.tar
-          docker load -i ./dockerimages/profileservice.tar
-          docker load -i ./dockerimages/e2etesting.tar
-          docker images
+#      - name: Upload Docker images as artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: docker-images
+#          path: ./dockerimages/
+#
+#  test:
+#    runs-on: ubuntu-latest
+#    needs: build
+#
+#    steps:
+#      - uses: actions/checkout@v4
+#        name: Checkout docker compose file
+#        with:
+#          sparse-checkout: |
+#            docker-compose.yml
+#            ocelot.json
+#          sparse-checkout-cone-mode: false
+#
+#      - name: Create docker images folder
+#        run: |
+#          docker images
+#          mkdir dockerimages
+#
+#      - name: Download Docker images artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: docker-images
+#          path: ./dockerimages/
+#
+#      - name: Load Docker images
+#        run: |
+#          docker load -i ./dockerimages/notificationservice.tar
+#          docker load -i ./dockerimages/taskservice.tar
+#          docker load -i ./dockerimages/apigateway.tar
+#          docker load -i ./dockerimages/profileservice.tar
+#          docker load -i ./dockerimages/e2etesting.tar
+#          docker images
 
       - name: Create and populate .env file
         run: |
@@ -95,7 +95,7 @@ jobs:
 
       - name: run docker containers
         run: |
-          docker compose --profile all --profile testing up --abort-on-container-exit shm-e2etesting
+          docker compose --profile all --profile testing up --abort-on-container-exit e2etesting
 
       - name: Parse Trx files
         uses: NasAmin/trx-parser@v0.6.0
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - build
-      - test
+#      - test
     if: ${{ always() }}
 
     steps:
