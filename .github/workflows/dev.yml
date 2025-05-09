@@ -92,6 +92,8 @@ jobs:
           echo "TEST_APIGATEWAYURL=http://shm-apigateway:8080" >> .env
           echo "TEST_SVIXAUTHTOKEN=${{ secrets.TEST_SVIXAUTHTOKEN }}" >> .env
           echo "TEST_SVIXAPIRUL=${{ secrets.TEST_SVIXAPIRUL }}" >> .env
+          echo "TEST_NGROKENDPOINT=willbefetchedautomatically" >> .env
+          echo "TEST_NGROK_AUTHTOKEN=${{ secrets.TEST_NGROK_AUTHTOKEN }}" >> .env
 
       - name: run docker containers
         run: |
