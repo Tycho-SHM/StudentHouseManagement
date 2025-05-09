@@ -31,7 +31,7 @@ public class UserTest : PlaywrightTest
     public static void ClassInitialize(TestContext testContext)
     {
         _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.Development.json")
+            .AddJsonFile("appsettings.Development.json", true)
             .AddEnvironmentVariables()
             .Build();
 
