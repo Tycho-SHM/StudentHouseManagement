@@ -52,6 +52,8 @@ public class UserTest : PlaywrightTest
             ngrokUrl = await GetPublicUrlFromApiAsync("http://shm-ngrok:4040/api/tunnels");
         }
         
+        Console.WriteLine($"NgrokUrl: {ngrokUrl}");
+        
         var ingestSources = await _svixClient.Ingest.Source.ListAsync();
 
         _ingestSource = ingestSources.Data.First(x => x.Name.Equals("clerk-dev"));
