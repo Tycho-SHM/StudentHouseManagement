@@ -136,6 +136,7 @@ services:
   e2etesting:
     depends_on:
       - profileservice
+      - apigateway
       - mongodb
       - ngrok
     build:
@@ -153,7 +154,7 @@ services:
       - ./dockerdata/e2etesting/testresults:/app/e2eTesting/SHM.E2ETest/TestResults
     environment:
       ClerkApiSecret: $TEST_CLERKAPISECRET
-      ApiGatewayUrl: $TEST_APIGATEWAYURL
+      ApiGatewayUrl: http://shm-apigateway:8080
       SvixAuthToken: $TEST_SVIXAUTHTOKEN
       SvixApiUrl: $TEST_SVIXAPIRUL
       NgrokEndpoint: $TEST_NGROKENDPOINT
