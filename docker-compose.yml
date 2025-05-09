@@ -110,6 +110,7 @@ services:
     ports:
       - 6004:8080
     environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
@@ -118,3 +119,43 @@ services:
       ProfileServiceDb__HouseProfileCollection: $PROFILESERVICEDB_HOUSEPROFILECOLLECTION
       ProfileServiceDb__UserProfileCollection: $PROFILESERVICEDB_USERPROFILECOLLECTION
       Clerk__Domain: $CLERK_DOMAIN
+  ngrok:
+    profiles:
+      - testing
+      - ngrok
+    image: ngrok/ngrok:latest
+    command:
+      - "http"
+      - "http://apigateway:8080"
+    environment:
+      NGROK_AUTHTOKEN: $TEST_NGROK_AUTHTOKEN
+    container_name: shm-ngrok
+    hostname: shm-ngrok
+    ports:
+      - 4040:4040
+  e2etesting:
+    depends_on:
+      - profileservice
+      - apigateway
+      - mongodb
+      - ngrok
+    build:
+      dockerfile: ./e2eTesting/Dockerfile
+      args:
+        GITHUB_OWNER: $GITHUB_PACKAGES_ORGANIZATION
+        GITHUB_USERNAME: $GITHUB_PACKAGES_USERNAME
+        GITHUB_TOKEN: $GITHUB_PACKAGES_TOKEN
+    image: tycho-shm/e2etesting
+    profiles:
+      - testing
+    container_name: shm-e2etesting
+    hostname: shm-e2etesting
+    volumes:
+      - ./dockerdata/e2etesting/testresults:/app/e2eTesting/SHM.E2ETest/TestResults
+    environment:
+      ClerkApiSecret: $TEST_CLERKAPISECRET
+      ApiGatewayUrl: http://shm-apigateway:8080
+      SvixAuthToken: $TEST_SVIXAUTHTOKEN
+      SvixApiUrl: $TEST_SVIXAPIRUL
+      NgrokEndpoint: $TEST_NGROKENDPOINT
+      RunningStandalone: false

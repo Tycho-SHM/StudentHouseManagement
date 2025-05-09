@@ -1,10 +1,12 @@
-using System.Text.Json;
+using System.Net.Http.Headers;
+using System.Xml.Linq;
 using Clerk.BackendAPI;
 using Clerk.BackendAPI.Models.Operations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
-using MongoDB.Bson;
-using SHM.ProfileService.Model;
+using Svix;
+using Svix.Models;
+using Environment = System.Environment;
 
 namespace SHM.E2ETest.User;
 
@@ -19,22 +21,48 @@ public class UserTest : PlaywrightTest
     private string _testProfileRandomValue = Guid.NewGuid().ToString();
 
     private static ClerkBackendApi _clerkSdk;
-    private bool userDeleted = false;
+    private bool userDeleted;
+    
+    private static SvixClient _svixClient;
+    private IngestSourceOut _ingestSource;
+    private IngestEndpointOut _ingestEndpoint;
 
     [ClassInitialize]
     public static void ClassInitialize(TestContext testContext)
     {
         _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.Development.json")
+            .AddJsonFile("appsettings.Development.json", true)
             .AddEnvironmentVariables()
             .Build();
 
         _clerkSdk = new ClerkBackendApi(_configuration["ClerkApiSecret"]);
+        _svixClient = new SvixClient(_configuration["SvixAuthToken"], new SvixOptions(_configuration["SvixApiUrl"]));
     }
 
     [TestInitialize]
     public async Task Initialize()
     {
+        string ngrokUrl;
+        if(_configuration["RunningStandalone"].Equals("true"))
+        {
+            ngrokUrl = _configuration["NgrokEndpoint"];
+        }
+        else
+        {
+            ngrokUrl = await GetPublicUrlFromApiAsync("http://shm-ngrok:4040/api/tunnels");
+        }
+        
+        Console.WriteLine($"NgrokUrl: {ngrokUrl}");
+        
+        var ingestSources = await _svixClient.Ingest.Source.ListAsync();
+
+        _ingestSource = ingestSources.Data.First(x => x.Name.Equals("clerk-dev"));
+
+        _ingestEndpoint = await _svixClient.Ingest.Endpoint.CreateAsync(_ingestSource.Id, new IngestEndpointIn()
+        {
+            Url = ngrokUrl + "/profiles/webhook/DeleteUser",
+        });
+        
         var userCreationRequest = new CreateUserRequestBody()
         {
             FirstName = $"E2E-UserTest-{_testProfileRandomValue}",
@@ -119,11 +147,34 @@ public class UserTest : PlaywrightTest
     [TestCleanup]
     public async Task Cleanup()
     {
+        await _svixClient.Ingest.Endpoint.DeleteAsync(_ingestSource.Id, _ingestEndpoint.Id);
+        
         await _profileServiceApi.DisposeAsync();
 
         if (!userDeleted && _user != null)
         {
             await _clerkSdk.Users.DeleteAsync(_user.Id);
         }
+    }
+    
+    public static async Task<string> GetPublicUrlFromApiAsync(string apiUrl)
+    {
+        using var client = new HttpClient();
+        
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+        
+        var response = await client.GetAsync(apiUrl);
+        response.EnsureSuccessStatusCode(); // Throw an exception if the status code is not successful
+
+        var xmlString = await response.Content.ReadAsStringAsync();
+
+        var doc = XDocument.Parse(xmlString);
+
+        // Find the first Tunnels element and then the PublicURL element within it
+        var publicUrlElement = doc.Descendants("Tunnels").FirstOrDefault()?.Element("PublicURL");
+
+        var publicUrl = publicUrlElement?.Value;
+
+        return publicUrl ?? null; // Or throw an exception if the element is expected
     }
 }

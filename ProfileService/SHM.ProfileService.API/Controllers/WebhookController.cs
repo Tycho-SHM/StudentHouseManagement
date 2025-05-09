@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SHM.ProfileService.Abstractions.Business;
 using Svix;
 using Svix.Exceptions;
+using Environment = System.Environment;
 
 namespace SHM.ProfileService.API.Controllers;
 
@@ -14,11 +15,13 @@ public class WebhookController : ControllerBase
 {
     private readonly ILogger<WebhookController> _logger;
     private readonly IUserProfileBusiness _userProfileBusiness;
+    private readonly IHostEnvironment _environment;
 
-    public WebhookController(ILogger<WebhookController> logger, IUserProfileBusiness userProfileBusiness)
+    public WebhookController(ILogger<WebhookController> logger, IUserProfileBusiness userProfileBusiness, IHostEnvironment environment)
     {
         _logger = logger;
         _userProfileBusiness = userProfileBusiness;
+        _environment = environment;
     }
     
     [HttpPost("DeleteUser")]
@@ -27,25 +30,28 @@ public class WebhookController : ControllerBase
         using var reader = new StreamReader(Request.Body);
         var payload = await reader.ReadToEndAsync();
 
-        var headers = new WebHeaderCollection();
-        headers.Set("svix-id", Request.Headers["svix-id"]);
-        headers.Set("svix-timestamp", Request.Headers["svix-timestamp"]);
-        headers.Set("svix-signature", Request.Headers["svix-signature"]);
+        if (!_environment.IsDevelopment())
+        {
+            var headers = new WebHeaderCollection();
+            headers.Set("svix-id", Request.Headers["svix-id"]);
+            headers.Set("svix-timestamp", Request.Headers["svix-timestamp"]);
+            headers.Set("svix-signature", Request.Headers["svix-signature"]);
         
-        var webhookChecker = new Webhook("whsec_WiypSDKgkWSit50lBkbaQCn7+A55yAyg");
+            var webhookChecker = new Webhook("whsec_lqN95He/Msc5IXauPCLTaKekMztgph/b");
 
-        try
-        {
-            webhookChecker.Verify(payload, headers);
-        }
-        catch (Exception e)
-        {
-            if (e is WebhookVerificationException)
+            try
             {
-                _logger.LogWarning("Unauthorized webhook!");
-                return Unauthorized();
+                webhookChecker.Verify(payload, headers);
             }
-            return BadRequest();
+            catch (Exception e)
+            {
+                if (e is WebhookVerificationException)
+                {
+                    _logger.LogWarning("Unauthorized webhook!");
+                    return Unauthorized();
+                }
+                return BadRequest();
+            }
         }
         
         var jsonDocument = JsonDocument.Parse(payload);
