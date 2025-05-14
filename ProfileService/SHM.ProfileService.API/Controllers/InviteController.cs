@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.Model;
+using SHM.ProfileService.Model.Invite;
 
 namespace SHM.ProfileService.API.Controllers;
 
@@ -8,15 +11,47 @@ namespace SHM.ProfileService.API.Controllers;
 public class InviteController : ControllerBase
 {
     private readonly ILogger<InviteController> _logger;
+    private readonly IInviteBusiness _inviteBusiness;
     
-    public InviteController(ILogger<InviteController> logger)
+    public InviteController(ILogger<InviteController> logger, IInviteBusiness inviteBusiness)
     {
         _logger = logger;
+        _inviteBusiness = inviteBusiness;
     }
 
     [HttpGet("Received/{userProfileId:guid}")]
-    public async Task<ActionResult<List<Invite>>> Get(Guid userProfileId)
+    [Authorize]
+    public async Task<ActionResult<List<Invite>>> GetReceived(Guid userProfileId)
     {
-        return await Task.FromResult(new List<Invite>());
+        var user = HttpContext.User;
+        if (!user.HasClaim(claim => claim.Type.Equals("sub")))
+        {
+            return BadRequest();
+        }
+        
+        if(!userProfileId.Equals(Guid.Parse(user.FindFirst("sub")!.Value)))
+        {
+            return Unauthorized();
+        }
+        
+        return await _inviteBusiness.GetReceivedInvites(userProfileId);
+    }
+    
+    [HttpGet("Sent/{userProfileId:guid}")]
+    [Authorize]
+    public async Task<ActionResult<List<Invite>>> GetSent(Guid userProfileId)
+    {
+        var user = HttpContext.User;
+        if (!user.HasClaim(claim => claim.Type.Equals("sub")))
+        {
+            return BadRequest();
+        }
+        
+        if(!userProfileId.Equals(Guid.Parse(user.FindFirst("sub")!.Value)))
+        {
+            return Unauthorized();
+        }
+        
+        return await _inviteBusiness.GetSentInvites(userProfileId);
     }
 }

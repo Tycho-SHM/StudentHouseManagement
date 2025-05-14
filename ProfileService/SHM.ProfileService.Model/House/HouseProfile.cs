@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SHM.ProfileService.Model;
+namespace SHM.ProfileService.Model.House;
 
 public class HouseProfile
 {
@@ -11,5 +11,5 @@ public class HouseProfile
     public required string Name { get; set; }
     public string? ImgUrl { get; set; }
     public DateTime CreatedDateTimeUtc { get; set; } = DateTime.UtcNow;
-    public List<UserProfile> Members { get; set; }
+    public List<HouseMembership> Members { get; set; }
 }

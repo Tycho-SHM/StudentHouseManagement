@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.Abstractions.Repositories;
 using SHM.ProfileService.Model;
+using SHM.ProfileService.Model.Invite;
 
 namespace SHM.ProfileService;
 

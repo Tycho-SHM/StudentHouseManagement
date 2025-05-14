@@ -1,4 +1,5 @@
 using SHM.ProfileService.Model;
+using SHM.ProfileService.Model.Invite;
 
 namespace SHM.ProfileService.Abstractions.Repositories;
 

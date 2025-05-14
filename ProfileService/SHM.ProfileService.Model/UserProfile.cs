@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.Model;
 

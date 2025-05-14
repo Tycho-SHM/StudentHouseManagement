@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using SHM.ProfileService.Abstractions.Repositories;
 using SHM.ProfileService.Model;
+using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.MongoDb;
 
@@ -36,5 +37,11 @@ public class HouseProfileRepository : IHouseProfileRepository
     {
         await _collection.InsertOneAsync(houseProfile);
         return _collection.Find(x => x.Id == houseProfile.Id).FirstOrDefault();
+    }
+
+    public async Task<bool> ExistsByName(string houseName)
+    {
+        var result = await _collection.Find(x => x.Name == houseName).FirstOrDefaultAsync();
+        return result != null;
     }
 }
