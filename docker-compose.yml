@@ -31,6 +31,18 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: $MONGODB_USERNAME
       MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
+  citus:
+    container_name: shm-citus
+    hostname: shm-citus
+    image: citusdata/citus
+    profiles:
+      - citus
+      - all
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    ports:
+      - 5432:5432
   apigateway:
     build:
       dockerfile: ./ApiGateway/Dockerfile
