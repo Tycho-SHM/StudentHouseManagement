@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using SHM.ProfileService;
 using SHM.ProfileService.Abstractions.Business;
-using SHM.ProfileService.MongoDb;
+using SHM.ProfileService.EfCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<IUserProfileBusiness, UserProfileBusiness>();
 
-builder.Services.RegisterSHMMongoDb(options =>
-{
-    builder.Configuration.GetSection("ProfileServiceDb").Bind(options);
-});
+// builder.Services.RegisterSHMMongoDb(options =>
+// {
+//     builder.Configuration.GetSection("ProfileServiceDb").Bind(options);
+// });
+
+var dbConfig = builder.Configuration.GetSection("ProfileServiceDb");
+builder.Services.RegisterSHMProfileServiceEfCore(dbConfig.GetValue<string>("connectionString"),
+    dbConfig.GetValue<string>("database"));
 
 builder.Services.AddAuthentication(options =>
     {

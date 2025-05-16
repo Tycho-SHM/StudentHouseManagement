@@ -1,12 +1,9 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.Model.Invite;
 
 public class Invite
 {
-    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid Id { get; set; } = Guid.NewGuid();
     public required UserProfile InvitedByUserProfile { get; set; }
     public required UserProfile InvitedUserProfile { get; set; }

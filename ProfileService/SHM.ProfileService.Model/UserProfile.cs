@@ -1,12 +1,9 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.Model;
 
 public class UserProfile
 {
-    [BsonGuidRepresentation(GuidRepresentation.Standard)]
     public Guid Id { get; set; } = Guid.NewGuid();
     public bool Deleted { get; set; }
     public string? ImgUrl { get; set; }
@@ -14,5 +11,5 @@ public class UserProfile
     public DateTime LastUpdatedDateTimeUtc { get; set; } = DateTime.UtcNow;
     public DateTime CreatedDateTimeUtc { get; set; } = DateTime.UtcNow;
     public string? DisplayName { get; set; }
-    public List<HouseProfile> Houses { get; set; } = new List<HouseProfile>();
+    public List<HouseProfile> Houses { get; set; } = new();
 }

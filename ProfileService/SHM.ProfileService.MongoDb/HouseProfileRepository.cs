@@ -3,17 +3,16 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using SHM.ProfileService.Abstractions.Repositories;
-using SHM.ProfileService.Model;
 using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.MongoDb;
 
 public class HouseProfileRepository : IHouseProfileRepository
 {
-    private readonly ILogger<HouseProfileRepository> _logger;
     private readonly MongoClient _client;
-    private readonly IMongoDatabase _database;
     private readonly IMongoCollection<HouseProfile> _collection;
+    private readonly IMongoDatabase _database;
+    private readonly ILogger<HouseProfileRepository> _logger;
 
     public HouseProfileRepository(ILogger<HouseProfileRepository> logger, IOptions<MongoDbOptions> options)
     {
@@ -22,7 +21,7 @@ public class HouseProfileRepository : IHouseProfileRepository
         _database = _client.GetDatabase(options.Value.Database);
         _collection = _database.GetCollection<HouseProfile>(options.Value.HouseProfileCollection);
     }
-    
+
     public async Task<List<HouseProfile>> GetAll()
     {
         return await _collection.AsQueryable().ToListAsync();

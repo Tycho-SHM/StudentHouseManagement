@@ -1,4 +1,3 @@
-using SHM.ProfileService.Model;
 using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.Abstractions.Repositories;

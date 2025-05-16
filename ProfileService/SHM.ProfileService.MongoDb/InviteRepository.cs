@@ -1,5 +1,4 @@
 using SHM.ProfileService.Abstractions.Repositories;
-using SHM.ProfileService.Model;
 using SHM.ProfileService.Model.Invite;
 
 namespace SHM.ProfileService.MongoDb;

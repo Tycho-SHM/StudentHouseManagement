@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SHM.ProfileService.Abstractions.Repositories;
-using SHM.ProfileService.Model;
 using SHM.ProfileService.Model.House;
 
 namespace SHM.ProfileService.API.Controllers;
@@ -11,11 +10,12 @@ namespace SHM.ProfileService.API.Controllers;
 [Authorize]
 public class HouseProfileController : ControllerBase
 {
-    private readonly ILogger<HouseProfileController> _logger;
     private readonly IHouseProfileRepository _houseProfileRepository;
+    private readonly ILogger<HouseProfileController> _logger;
     private readonly IUserProfileRepository _userProfileRepository;
 
-    public HouseProfileController(ILogger<HouseProfileController> logger, IHouseProfileRepository houseProfileRepository, IUserProfileRepository userProfileRepository)
+    public HouseProfileController(ILogger<HouseProfileController> logger,
+        IHouseProfileRepository houseProfileRepository, IUserProfileRepository userProfileRepository)
     {
         _logger = logger;
         _houseProfileRepository = houseProfileRepository;
@@ -34,7 +34,7 @@ public class HouseProfileController : ControllerBase
     {
         return await _houseProfileRepository.GetById(id);
     }
-    
+
     [HttpPost]
     public async Task<HouseProfile> Add(HouseProfile houseProfile)
     {
@@ -44,14 +44,11 @@ public class HouseProfileController : ControllerBase
     [HttpPost("CreateWithName")]
     public async Task<ActionResult<HouseProfile>> CreateWithName(string houseName)
     {
-        if (await _houseProfileRepository.ExistsByName(houseName))
-        {
-            return BadRequest();
-        }
+        if (await _houseProfileRepository.ExistsByName(houseName)) return BadRequest();
 
         var userProfileId = HttpContext.User.FindFirst("sub")!.Value;
         var userProfile = await _userProfileRepository.GetByUserId(userProfileId);
-        
+
         return await _houseProfileRepository.Add(new HouseProfile
         {
             Name = houseName,
@@ -59,7 +56,7 @@ public class HouseProfileController : ControllerBase
             [
                 new HouseMembership
                 {
-                    UserProfile = userProfile,
+                    UserProfile = userProfile
                 }
             ]
         });
