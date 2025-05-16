@@ -1,0 +1,1 @@
+dotnet ef migrations add $1 -c ProfileContext -o ../SHM.ProfileService.EfCore/Migrations -p ../SHM.ProfileService.EfCore/SHM.ProfileService.EfCore.csproj
