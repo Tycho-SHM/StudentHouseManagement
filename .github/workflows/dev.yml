@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
 
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
 #          path: ./dockerimages/
 #
 #  test:
-#    runs-on: ubuntu-latest
+#    runs-on: blacksmith-4vcpu-ubuntu-2404
 #    needs: build
 #
 #    steps:
@@ -111,7 +111,7 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   cleanup:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs:
       - build-test
 #      - test

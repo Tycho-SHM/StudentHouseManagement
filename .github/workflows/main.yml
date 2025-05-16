@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
           path: ./dockerimages/
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: build
 
     steps:
@@ -103,7 +103,7 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   push-images:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs: test
 
     steps:
@@ -148,7 +148,7 @@ jobs:
           docker push ghcr.io/tycho-shm/profileservice:latest
 
   cleanup:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     needs:
       - build
       - test
