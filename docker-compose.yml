@@ -150,6 +150,7 @@ services:
       - profileservice
       - apigateway
       - mongodb
+      - citus
       - ngrok
     build:
       dockerfile: ./e2eTesting/Dockerfile

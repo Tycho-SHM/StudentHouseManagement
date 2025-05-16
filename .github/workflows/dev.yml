@@ -85,7 +85,9 @@ jobs:
           echo "RABBITMQ_PASSWORD=guest" >> .env
           echo "MONGODB_USERNAME=testuser" >> .env
           echo "MONGODB_PASSWORD=testpassword" >> .env
-          echo "PROFILESERVICEDB_CONNECTIONSTRING=mongodb://testuser:testpassword@mongodb:27017" >> .env
+          echo "POSTGRES_USER=admin" >> .env
+          echo "POSTGRES_PASSWORD=admin" >> .env
+          echo "PROFILESERVICEDB_CONNECTIONSTRING=Host=shm_citus;Database=shm_profileservice;Username=admin;Password=admin;Port=5432;" >> .env
           echo "PROFILESERVICEDB_DATABASE=shm_profileservice" >> .env
           echo "PROFILESERVICEDB_HOUSEPROFILECOLLECTION=houseprofiles" >> .env
           echo "PROFILESERVICEDB_USERPROFILECOLLECTION=userprofiles" >> .env

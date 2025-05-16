@@ -5,10 +5,11 @@ using SHM.ProfileService.Model.Invite;
 
 namespace SHM.ProfileService.EfCore;
 
-public class ProfileContext : DbContext
+public sealed class ProfileContext : DbContext
 {
     public ProfileContext(DbContextOptions<ProfileContext> options) : base(options)
     {
+        Database.EnsureCreated();
     }
 
     public DbSet<UserProfile> UserProfiles { get; set; }
