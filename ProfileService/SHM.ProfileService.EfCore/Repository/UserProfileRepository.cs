@@ -40,6 +40,9 @@ public class UserProfileRepository : IUserProfileRepository
 
     public async Task<UserProfile> Update(UserProfile userProfile)
     {
-        throw new NotImplementedException();
+        userProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
+        _dbContext.UserProfiles.Update(userProfile);
+        await _dbContext.SaveChangesAsync();
+        return userProfile;
     }
 }
