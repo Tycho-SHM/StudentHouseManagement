@@ -10,12 +10,14 @@ namespace SHM.ProfileService.API.Controllers;
 public class InviteController : ControllerBase
 {
     private readonly IInviteBusiness _inviteBusiness;
+    private readonly IUserProfileBusiness _userProfileBusiness;
     private readonly ILogger<InviteController> _logger;
 
-    public InviteController(ILogger<InviteController> logger, IInviteBusiness inviteBusiness)
+    public InviteController(ILogger<InviteController> logger, IInviteBusiness inviteBusiness, IUserProfileBusiness userProfileBusiness)
     {
         _logger = logger;
         _inviteBusiness = inviteBusiness;
+        _userProfileBusiness = userProfileBusiness;
     }
 
     [HttpGet("Received/{userProfileId:guid}")]
@@ -40,5 +42,17 @@ public class InviteController : ControllerBase
         if (!userProfileId.Equals(Guid.Parse(user.FindFirst("sub")!.Value))) return Unauthorized();
 
         return await _inviteBusiness.GetSentInvites(userProfileId);
+    }
+    
+    [HttpPost("Invite")]
+    [Authorize]
+    public async Task<ActionResult<Invite>> Invite(Guid invitedUserProfileId, Guid houseProfileId)
+    {
+        var user = HttpContext.User;
+        if (!user.HasClaim(claim => claim.Type.Equals("sub"))) return BadRequest();
+
+        var userProfile = await _userProfileBusiness.GetOrCreate(user.FindFirst("sub")!.Value);
+        
+        return await _inviteBusiness.SendInviteByUserProfileIdToHouse(userProfile.Id, invitedUserProfileId, houseProfileId);
     }
 }

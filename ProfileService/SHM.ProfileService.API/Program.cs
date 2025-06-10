@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using SHM.MessageQueues.RabbitMQ;
 using SHM.ProfileService;
 using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.EfCore;
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddTransient<IUserProfileBusiness, UserProfileBusiness>();
+builder.Services.AddTransient<IInviteBusiness, InviteBusiness>();
 
 // builder.Services.RegisterSHMMongoDb(options =>
 // {
@@ -38,6 +40,11 @@ builder.Services.AddAuthentication(options =>
         options.MapInboundClaims = false;
         options.RequireHttpsMetadata = true;
     });
+
+builder.Services.RegisterSHMRabbitMQ(options =>
+{
+    builder.Configuration.GetSection("RabbitMQ").Bind(options);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

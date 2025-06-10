@@ -9,7 +9,10 @@ public sealed class ProfileContext : DbContext
 {
     public ProfileContext(DbContextOptions<ProfileContext> options) : base(options)
     {
-        Database.EnsureCreated();
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Testing")
+        {
+            Database.EnsureCreated();
+        }
     }
 
     public DbSet<UserProfile> UserProfiles { get; set; }

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SHM.MessageQueues.Abstractions;
 using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.Abstractions.Repositories;
 using SHM.ProfileService.Model;
@@ -9,11 +10,13 @@ public class UserProfileBusiness : IUserProfileBusiness
 {
     private readonly ILogger<UserProfileBusiness> _logger;
     private readonly IUserProfileRepository _userProfileRepository;
+    private readonly IMessageBrokerConnection _messageBrokerConnection;
 
-    public UserProfileBusiness(ILogger<UserProfileBusiness> logger, IUserProfileRepository userProfileRepository)
+    public UserProfileBusiness(ILogger<UserProfileBusiness> logger, IUserProfileRepository userProfileRepository, IMessageBrokerConnection messageBrokerConnection)
     {
         _logger = logger;
         _userProfileRepository = userProfileRepository;
+        _messageBrokerConnection = messageBrokerConnection;
     }
 
     public async Task<UserProfile> GetOrCreate(string userId)

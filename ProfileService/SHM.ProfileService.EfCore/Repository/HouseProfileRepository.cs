@@ -28,11 +28,13 @@ public class HouseProfileRepository : IHouseProfileRepository
 
     public async Task<HouseProfile> Add(HouseProfile houseProfile)
     {
-        throw new NotImplementedException();
+        await _dbContext.HouseProfiles.AddAsync(houseProfile);
+        await _dbContext.SaveChangesAsync();
+        return houseProfile;
     }
 
     public async Task<bool> ExistsByName(string houseName)
     {
-        throw new NotImplementedException();
+        return await _dbContext.HouseProfiles.AnyAsync(x => x.Name.Equals(houseName));
     }
 }

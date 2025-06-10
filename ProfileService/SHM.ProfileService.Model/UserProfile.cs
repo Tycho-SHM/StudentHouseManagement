@@ -11,5 +11,4 @@ public class UserProfile
     public DateTime LastUpdatedDateTimeUtc { get; set; } = DateTime.UtcNow;
     public DateTime CreatedDateTimeUtc { get; set; } = DateTime.UtcNow;
     public string? DisplayName { get; set; }
-    public List<HouseProfile> Houses { get; set; } = new();
 }

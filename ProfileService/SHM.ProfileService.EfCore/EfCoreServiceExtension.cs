@@ -19,6 +19,7 @@ public static class EfCoreServiceExtension
 
         services.TryAddTransient<IUserProfileRepository, UserProfileRepository>();
         services.TryAddTransient<IHouseProfileRepository, HouseProfileRepository>();
+        services.TryAddTransient<IInviteRepository, InviteRepository>();
 
         return services;
     }

@@ -29,7 +29,7 @@ public class WebhookController : ControllerBase
         using var reader = new StreamReader(Request.Body);
         var payload = await reader.ReadToEndAsync();
 
-        if (!_environment.IsDevelopment())
+        if (!_environment.IsDevelopment() && !_environment.IsEnvironment("Testing"))
         {
             var headers = new WebHeaderCollection();
             headers.Set("svix-id", Request.Headers["svix-id"]);

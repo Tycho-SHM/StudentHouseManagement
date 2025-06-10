@@ -13,6 +13,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Clerk.BackendAPI" Version="0.7.2" />
+      <PackageReference Include="MailKit" Version="4.12.1" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.2" />
       <PackageReference Include="shm.messagequeues.abstractions" Version="0.1.0" />
     </ItemGroup>

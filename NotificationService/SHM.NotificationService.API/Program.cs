@@ -1,6 +1,7 @@
 using Scalar.AspNetCore;
 using SHM.MessageQueues.RabbitMQ;
 using SHM.NotificationService;
+using SHM.NotificationService.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,12 @@ builder.Services.RegisterSHMRabbitMQ(options =>
     {
         options.Password = File.ReadAllText(options.Password);
     }
+});
+
+builder.Services.Configure<NotificationServiceOptions>(options =>
+{
+    options.ClerkApiSecret = builder.Configuration.GetValue<string>("ClerkApiSecret");
+    options.ZeptoMailKey = builder.Configuration.GetValue<string>("ZeptoMailKey");
 });
 
 builder.Services.AddControllers();

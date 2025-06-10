@@ -34,6 +34,7 @@ services:
   citus:
     container_name: shm-citus
     hostname: shm-citus
+#    image: postgres:17.0-bookworm
     image: citusdata/citus
     profiles:
       - citus
@@ -78,6 +79,7 @@ services:
     ports:
       - 6002:8080
     environment:
+      ASPNETCORE_ENVIRONMENT: $ENVIRONMENT
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
@@ -100,6 +102,7 @@ services:
     ports:
       - 6003:8080
     environment:
+      ASPNETCORE_ENVIRONMENT: $ENVIRONMENT
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
@@ -122,7 +125,7 @@ services:
     ports:
       - 6004:8080
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_ENVIRONMENT: $ENVIRONMENT
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
