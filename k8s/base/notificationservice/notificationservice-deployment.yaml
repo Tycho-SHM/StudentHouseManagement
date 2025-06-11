@@ -37,6 +37,16 @@ spec:
             secretKeyRef:
               name: shm-staging-rabbitmq-default-user
               key: password
+        - name: ClerkApiSecret
+          valueFrom:
+            secretKeyRef:
+              name: notificationservice-secrets
+              key: ClerkApiSecret
+        - name: ZeptoMailKey
+          valueFrom:
+            secretKeyRef:
+              name: notificationservice-secrets
+              key: ZeptoMailKey
 #        - name: notificationserviceDb__ConnectionString
 #          valueFrom:
 #            secretKeyRef:
