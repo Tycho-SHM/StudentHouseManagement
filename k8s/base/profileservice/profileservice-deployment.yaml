@@ -22,21 +22,21 @@ spec:
         ports:
         - containerPort: 8080
         env:
-#        - name: RabbitMQ__Hostname
-#          valueFrom:
-#            secretKeyRef:
-#              name: profileservice-secrets
-#              key: rabbitmq-hostname
-#        - name: RabbitMQ__Username
-#          valueFrom:
-#            secretKeyRef:
-#              name: profileservice-secrets
-#              key: rabbitmq-username
-#        - name: RabbitMQ__Password
-#          valueFrom:
-#            secretKeyRef:
-#              name: profileservice-secrets
-#              key: rabbitmq-password
+        - name: RabbitMQ__Hostname
+          valueFrom:
+            secretKeyRef:
+              name: shm-staging-rabbitmq-default-user
+              key: host
+        - name: RabbitMQ__Username
+          valueFrom:
+            secretKeyRef:
+              name: shm-staging-rabbitmq-default-user
+              key: username
+        - name: RabbitMQ__Password
+          valueFrom:
+            secretKeyRef:
+              name: shm-staging-rabbitmq-default-user
+              key: password
         - name: ProfileServiceDb__ConnectionString
           valueFrom:
             secretKeyRef:
