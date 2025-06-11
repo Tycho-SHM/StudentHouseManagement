@@ -80,7 +80,7 @@ jobs:
 
       - name: Create and populate .env file
         run: |
-          echo "ENVIRONMENT=testing" >> .env
+          echo "ENVIRONMENT=Testing" >> .env
           echo "RABBITMQ_HOSTNAME=rabbitmq" >> .env
           echo "RABBITMQ_USERNAME=guest" >> .env
           echo "RABBITMQ_PASSWORD=guest" >> .env
