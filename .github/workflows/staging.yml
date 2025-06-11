@@ -1,15 +1,9 @@
-name: Development
+name: Main
 
 on:
   push:
     branches:
-      - '*'
-      - '!main'
-      - '!staging'
-  pull_request:
-    types:
-      - opened
-      - reopened
+      - main
 
 permissions:
   packages: write
@@ -17,7 +11,7 @@ permissions:
   checks: write
 
 jobs:
-  build-test:
+  build:
     runs-on: blacksmith-4vcpu-ubuntu-2404
 
     steps:
@@ -40,44 +34,44 @@ jobs:
           docker save tycho-shm/profileservice -o ./dockerimages/profileservice.tar
           docker save tycho-shm/e2etesting -o ./dockerimages/e2etesting.tar
 
-#      - name: Upload Docker images as artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: docker-images
-#          path: ./dockerimages/
-#
-#  test:
-#    runs-on: blacksmith-4vcpu-ubuntu-2404
-#    needs: build
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#        name: Checkout docker compose file
-#        with:
-#          sparse-checkout: |
-#            docker-compose.yml
-#            ocelot.json
-#          sparse-checkout-cone-mode: false
-#
-#      - name: Create docker images folder
-#        run: |
-#          docker images
-#          mkdir dockerimages
-#
-#      - name: Download Docker images artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: docker-images
-#          path: ./dockerimages/
-#
-#      - name: Load Docker images
-#        run: |
-#          docker load -i ./dockerimages/notificationservice.tar
-#          docker load -i ./dockerimages/taskservice.tar
-#          docker load -i ./dockerimages/apigateway.tar
-#          docker load -i ./dockerimages/profileservice.tar
-#          docker load -i ./dockerimages/e2etesting.tar
-#          docker images
+      - name: Upload Docker images as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+  test:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout docker compose file
+        with:
+          sparse-checkout: |
+            docker-compose.yml
+            ocelot.json
+          sparse-checkout-cone-mode: false
+
+      - name: Create docker images folder
+        run: |
+          docker images
+          mkdir dockerimages
+
+      - name: Download Docker images artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+      - name: Load Docker images
+        run: |
+          docker load -i ./dockerimages/notificationservice.tar
+          docker load -i ./dockerimages/taskservice.tar
+          docker load -i ./dockerimages/apigateway.tar
+          docker load -i ./dockerimages/profileservice.tar
+          docker load -i ./dockerimages/e2etesting.tar
+          docker images
 
       - name: Create and populate .env file
         run: |
@@ -112,11 +106,57 @@ jobs:
           TRX_PATH: ${{ github.workspace }}/dockerdata/e2etesting/testresults #This should be the path to your TRX files
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  push-images:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    needs: test
+
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create docker images folder
+        run: |
+          docker images
+          mkdir dockerimages
+
+      - name: Download Docker images artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-images
+          path: ./dockerimages/
+
+      - name: Load Docker images
+        run: |
+          docker load -i ./dockerimages/notificationservice.tar
+          docker load -i ./dockerimages/taskservice.tar
+          docker load -i ./dockerimages/apigateway.tar
+          docker load -i ./dockerimages/profileservice.tar
+          docker images
+
+      - name: Tag docker images
+        run: |
+          docker tag tycho-shm/notificationservice ghcr.io/tycho-shm/notificationservice:staging
+          docker tag tycho-shm/taskservice ghcr.io/tycho-shm/taskservice:staging
+          docker tag tycho-shm/apigateway ghcr.io/tycho-shm/apigateway:staging
+          docker tag tycho-shm/profileservice ghcr.io/tycho-shm/profileservice:staging
+
+      - name: Push to github packages
+        run: |
+          docker push ghcr.io/tycho-shm/notificationservice:staging
+          docker push ghcr.io/tycho-shm/taskservice:staging
+          docker push ghcr.io/tycho-shm/apigateway:staging
+          docker push ghcr.io/tycho-shm/profileservice:staging
+
   cleanup:
     runs-on: blacksmith-4vcpu-ubuntu-2404
     needs:
-      - build-test
-#      - test
+      - build
+      - test
+      - push-images
     if: ${{ always() }}
 
     steps:
