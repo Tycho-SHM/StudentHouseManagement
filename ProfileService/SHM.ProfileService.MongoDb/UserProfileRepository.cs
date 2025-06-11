@@ -9,10 +9,10 @@ namespace SHM.ProfileService.MongoDb;
 
 public class UserProfileRepository : IUserProfileRepository
 {
-    private readonly ILogger<UserProfileRepository> _logger;
     private readonly MongoClient _client;
-    private readonly IMongoDatabase _database;
     private readonly IMongoCollection<UserProfile> _collection;
+    private readonly IMongoDatabase _database;
+    private readonly ILogger<UserProfileRepository> _logger;
 
     public UserProfileRepository(ILogger<UserProfileRepository> logger, IOptions<MongoDbOptions> options)
     {
@@ -21,7 +21,7 @@ public class UserProfileRepository : IUserProfileRepository
         _database = _client.GetDatabase(options.Value.Database);
         _collection = _database.GetCollection<UserProfile>(options.Value.UserProfileCollection);
     }
-    
+
     public async Task<List<UserProfile>> GetAll()
     {
         return await _collection.AsQueryable().ToListAsync();
@@ -29,21 +29,15 @@ public class UserProfileRepository : IUserProfileRepository
 
     public async Task<UserProfile?> GetById(Guid id)
     {
-        if (!_collection.Find(FilterDefinition<UserProfile>.Empty).Limit(1).Any())
-        {
-            return null;
-        }
-        
+        if (!_collection.Find(FilterDefinition<UserProfile>.Empty).Limit(1).Any()) return null;
+
         return await _collection.Find(x => x.Id.Equals(id)).FirstOrDefaultAsync();
     }
 
     public async Task<UserProfile?> GetByUserId(string userId)
     {
-        if (!_collection.Find(FilterDefinition<UserProfile>.Empty).Limit(1).Any())
-        {
-            return null;
-        }
-        
+        if (!_collection.Find(FilterDefinition<UserProfile>.Empty).Limit(1).Any()) return null;
+
         return await _collection.Find(x => x.UserId.Equals(userId)).FirstOrDefaultAsync();
     }
 

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SHM.ProfileService.Model\SHM.ProfileService.Model.csproj" />
+        <ProjectReference Include="..\SHM.ProfileService.Model\SHM.ProfileService.Model.csproj"/>
     </ItemGroup>
 
 </Project>

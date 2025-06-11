@@ -31,6 +31,19 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: $MONGODB_USERNAME
       MONGO_INITDB_ROOT_PASSWORD: $MONGODB_PASSWORD
+  citus:
+    container_name: shm-citus
+    hostname: shm-citus
+#    image: postgres:17.0-bookworm
+    image: citusdata/citus
+    profiles:
+      - citus
+      - all
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    ports:
+      - 5432:5432
   apigateway:
     build:
       dockerfile: ./ApiGateway/Dockerfile
@@ -66,6 +79,7 @@ services:
     ports:
       - 6002:8080
     environment:
+      ASPNETCORE_ENVIRONMENT: $ENVIRONMENT
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
@@ -88,6 +102,7 @@ services:
     ports:
       - 6003:8080
     environment:
+      ASPNETCORE_ENVIRONMENT: $ENVIRONMENT
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
@@ -110,7 +125,7 @@ services:
     ports:
       - 6004:8080
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_ENVIRONMENT: $ENVIRONMENT
       RabbitMQ__Hostname: $RABBITMQ_HOSTNAME
       RabbitMQ__Username: $RABBITMQ_USERNAME
       RabbitMQ__Password: $RABBITMQ_PASSWORD
@@ -138,6 +153,7 @@ services:
       - profileservice
       - apigateway
       - mongodb
+      - citus
       - ngrok
     build:
       dockerfile: ./e2eTesting/Dockerfile

@@ -7,3 +7,31 @@ resources:
   - apigateway/apigateway-config.yaml
   - apigateway/apigateway-ocelotjson.yaml
   - cloudflared-config.yaml
+  -
+patches:
+  - path: apigateway/apigateway-deployment-staging.yaml
+    target:
+      kind: Deployment
+      name: shm-apigateway
+  - path: notificationservice/notificationservice-deployment-staging.yaml
+    target:
+      kind: Deployment
+      name: shm-notificationservice
+  - path: profileservice/profileservice-deployment-staging.yaml
+    target:
+      kind: Deployment
+      name: shm-profileservice
+  - path: taskservice/taskservice-deployment-staging.yaml
+    target:
+      kind: Deployment
+      name: shm-taskservice
+
+images:
+  - name: ghcr.io/tycho-shm/apigateway
+    newTag: staging
+  - name: ghcr.io/tycho-shm/notificationservice
+    newTag: staging
+  - name: ghcr.io/tycho-shm/profileservice
+    newTag: staging
+  - name: ghcr.io/tycho-shm/taskservice
+    newTag: staging

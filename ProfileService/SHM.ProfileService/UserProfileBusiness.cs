@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using SHM.MessageQueues.Abstractions;
 using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.Abstractions.Repositories;
 using SHM.ProfileService.Model;
@@ -9,20 +10,19 @@ public class UserProfileBusiness : IUserProfileBusiness
 {
     private readonly ILogger<UserProfileBusiness> _logger;
     private readonly IUserProfileRepository _userProfileRepository;
+    private readonly IMessageBrokerConnection _messageBrokerConnection;
 
-    public UserProfileBusiness(ILogger<UserProfileBusiness> logger, IUserProfileRepository userProfileRepository)
+    public UserProfileBusiness(ILogger<UserProfileBusiness> logger, IUserProfileRepository userProfileRepository, IMessageBrokerConnection messageBrokerConnection)
     {
         _logger = logger;
         _userProfileRepository = userProfileRepository;
+        _messageBrokerConnection = messageBrokerConnection;
     }
-    
+
     public async Task<UserProfile> GetOrCreate(string userId)
     {
         var userProfile = await _userProfileRepository.GetByUserId(userId);
-        if (userProfile != null)
-        {
-            return userProfile; 
-        }
+        if (userProfile != null) return userProfile;
 
         userProfile = new UserProfile
         {
@@ -40,21 +40,12 @@ public class UserProfileBusiness : IUserProfileBusiness
     public async Task<UserProfile?> Update(UserProfile userProfile)
     {
         var oldUserProfile = await GetById(userProfile.Id);
-        if (oldUserProfile == null)
-        {
-            return null;
-        }
+        if (oldUserProfile == null) return null;
 
-        if (userProfile.DisplayName != null)
-        {
-            oldUserProfile.DisplayName = userProfile.DisplayName;
-        }
+        if (userProfile.DisplayName != null) oldUserProfile.DisplayName = userProfile.DisplayName;
 
-        if (userProfile.ImgUrl != null)
-        {
-            oldUserProfile.ImgUrl = userProfile.ImgUrl;
-        }
-        
+        if (userProfile.ImgUrl != null) oldUserProfile.ImgUrl = userProfile.ImgUrl;
+
         oldUserProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
         return await _userProfileRepository.Update(oldUserProfile);
     }
@@ -62,15 +53,12 @@ public class UserProfileBusiness : IUserProfileBusiness
     public async Task<bool> Delete(string userId)
     {
         var userProfile = await _userProfileRepository.GetByUserId(userId);
-        if (userProfile == null)
-        {
-            return false;
-        }
+        if (userProfile == null) return false;
 
         userProfile.DisplayName = "Deleted Profile";
         userProfile.ImgUrl = null;
         userProfile.LastUpdatedDateTimeUtc = DateTime.UtcNow;
-        
+
         userProfile.Deleted = true;
 
         var updatedUserProfile = await _userProfileRepository.Update(userProfile);
