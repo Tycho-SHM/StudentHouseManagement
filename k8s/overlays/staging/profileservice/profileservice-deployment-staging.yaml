@@ -3,4 +3,4 @@ kind: Deployment
 metadata:
   name: shm-profileservice
   annotations:
-    argocd-image-updater.argoproj.io/image-list: ghcr.io/tycho-shm/profileservice:staging
+    keel.sh/policy: "force"

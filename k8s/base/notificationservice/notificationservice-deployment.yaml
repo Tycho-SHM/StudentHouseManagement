@@ -19,6 +19,7 @@ spec:
       containers:
       - name: shm-notificationservice
         image: ghcr.io/tycho-shm/notificationservice
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:

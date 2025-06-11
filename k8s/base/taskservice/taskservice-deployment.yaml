@@ -19,6 +19,7 @@ spec:
       containers:
       - name: shm-taskservice
         image: ghcr.io/tycho-shm/taskservice
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         env:
