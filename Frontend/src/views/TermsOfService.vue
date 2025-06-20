@@ -172,5 +172,20 @@
 </template>
 
 <style scoped>
-
+body {
+  font-family: sans-serif;
+  line-height: 1.6;
+  color: #333;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+h1,
+h2,
+h3 {
+  color: #222;
+}
+a {
+  color: #007bff;
+}
 </style>
