@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Metrics;
 using SHM.ProfileService.Abstractions.Business;
 using SHM.ProfileService.Model.Invite;
 
@@ -12,12 +13,14 @@ public class InviteController : ControllerBase
     private readonly IInviteBusiness _inviteBusiness;
     private readonly IUserProfileBusiness _userProfileBusiness;
     private readonly ILogger<InviteController> _logger;
+    private readonly MetricsService _metricsService;
 
-    public InviteController(ILogger<InviteController> logger, IInviteBusiness inviteBusiness, IUserProfileBusiness userProfileBusiness)
+    public InviteController(ILogger<InviteController> logger, IInviteBusiness inviteBusiness, IUserProfileBusiness userProfileBusiness, MetricsService metricsService)
     {
         _logger = logger;
         _inviteBusiness = inviteBusiness;
         _userProfileBusiness = userProfileBusiness;
+        _metricsService = metricsService;
     }
 
     [HttpGet("Received/{userProfileId:guid}")]
@@ -52,6 +55,8 @@ public class InviteController : ControllerBase
         if (!user.HasClaim(claim => claim.Type.Equals("sub"))) return BadRequest();
 
         var userProfile = await _userProfileBusiness.GetOrCreate(user.FindFirst("sub")!.Value);
+        
+        _metricsService.IncrementRequestCount("UserInvited");
         
         return await _inviteBusiness.SendInviteByUserProfileIdToHouse(userProfile.Id, invitedUserProfileId, houseProfileId);
     }

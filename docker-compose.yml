@@ -44,6 +44,16 @@ services:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     ports:
       - 5432:5432
+  prometheus:
+    image: prom/prometheus
+    profiles:
+      - prometheus
+      - all
+    volumes:
+      - './dockerdata/prometheus/data:/prometheus'
+      - './dockerdata/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+    ports:
+      - '9090:9090'
   apigateway:
     build:
       dockerfile: ./ApiGateway/Dockerfile
